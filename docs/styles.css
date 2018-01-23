@@ -1,0 +1,61 @@
+.affix {
+  position: static;
+}
+
+@media (min-width: 992px) {
+  #toc.affix {
+    top: inherit;
+    width: inherit;
+    position: fixed;
+  }
+}
+
+#toc {
+	width: 100%;
+	text-align: left;
+	max-height: 100%;
+  overflow-y: scroll;
+}
+
+#logo {
+  background-color: #A51C30;
+}
+
+#logo .container p {
+  margin: 0px;
+}
+
+h3, h4, h5, h6 {
+  margin-top: 20px;
+}
+
+.list-group-item.active {
+  background-color: #A51C30;
+  border-color: #A51C30;
+}
+
+body {
+  margin-top: 115px;
+  overflow: visible;
+}
+
+html {
+	overflow: visible;
+}
+
+.chart-index-element h2 {
+  width: 77%;
+  float: right;
+  display: inline;
+  clear: both;
+}
+
+.chart-index-element p:last-of-type {
+  width: 77%;
+  float: right;
+}
+
+.chart-index-element p:first-of-type {
+  width: 20%;
+  float: left;
+}

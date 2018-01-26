@@ -94,8 +94,7 @@ gen t_white = (t_race_ethnicity == 5)
 
 
 ```stata
-keep if school_year > 2011
-keep if school_year < 2014
+keep if school_year == 2015
 keep if !missing(t_race_ethnicity)
 keep if !missing(t_new_hire)
 ```
@@ -165,7 +164,7 @@ isid sid school_year
 
 
 ```stata
-keep if school_year > 2012
+keep if school_year == 2015
 keep if !missing(s_race_ethnicity)
 ```
 
@@ -246,7 +245,7 @@ graph bar teacher new_teacher student,
 		size(medsmall) region(lstyle(none) lcolor(none) color(none)))
 	graphregion(color(white) fcolor(white) lcolor(white))
 	plotregion(color(white) fcolor(white) lcolor(white) margin(5 5 2 0))
-	note(" " "Notes: Sample includes teachers and students in the 2012-13 school year, 
+	note(" " "Notes: Sample includes teachers and students in the 2014-15 school year, 
 with `unique_teachers' unique teachers and `unique_students' unique students.", size(vsmall) 
 span);		
 #delimit cr

@@ -46,9 +46,9 @@
 	// Set program switches for recruitment analyses. Set switch to 0 to skip the 
 	// section of code that runs a given analysis, and to 1 to run the analysis.
 	
-	global new_hires_pie	 			= 0
-	global new_hires_year				= 0
-	global new_hires_school_poverty 	= 0
+	global new_hires_pie	 			= 1
+	global new_hires_year				= 1
+	global new_hires_school_poverty 	= 1
 	global teacher_effects_cert_pathway	= 0
 	global share_teachers_stu_race		= 1
 
@@ -644,8 +644,7 @@ if ${share_teachers_stu_race}==1 {
 	
 	// Step 3: Restrict the teacher sample.
 	
-	keep if school_year > 2011
-	keep if school_year < 2014
+	keep if school_year == 2015
 	keep if !missing(t_race_ethnicity)
 	keep if !missing(t_new_hire)
 	
@@ -691,7 +690,7 @@ if ${share_teachers_stu_race}==1 {
 	
 	// Step 9: Restrict the student sample.
 	
-	keep if school_year > 2012
+	keep if school_year == 2015
 	keep if !missing(s_race_ethnicity)
 	
 	// Step 10: Review student variables.

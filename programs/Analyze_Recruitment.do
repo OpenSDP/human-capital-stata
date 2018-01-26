@@ -223,10 +223,9 @@ if ${new_hires_year}==1 {
 			region(lstyle(none) lcolor(none) color(none))) 
 		graphregion(color(white) fcolor(white) lcolor(white)) 
 		plotregion(color(white) fcolor(white) lcolor(white) margin(2 0 2 0))
-		note(" " "*Significantly different from 2008 value, at the 95 percent confidence 
-level."	"Notes: Sample includes teachers in the 2012-13 through 2014-15 school 
-years, with `teacher_years' teacher years and `unique_teachers' unique teachers.
-Novices were in" "their first year of teaching.", size(vsmall) span);
+		note(" " "*Significantly different from 2012-2013 value, at the 95 percent confidence level."
+			"Notes: Sample includes teachers in the 2012-13 through 2014-15 school years, with `teacher_years' teacher years and `unique_teachers' unique teachers." 
+			"Novices were in their first year of teaching.", size(vsmall) span);
 	#delimit cr
 	
 	// Step 10: Save the chart in Stata Graph and EMF formats.

@@ -1,7 +1,9 @@
 
 
-. graph export "docs\Share_of_Teachers_Who_Are_New_Hires.png", replace
-(file docs\Share_of_Teachers_Who_Are_New_Hires.png written in PNG format)
+. graph export "docs\Share_of_Teachers_Who_Are_New_Hires_by_School_Year.png", r
+> eplace
+(file docs\Share_of_Teachers_Who_Are_New_Hires_by_School_Year.png written in PN
+> G format)
 
 . 
 end of do-file

@@ -28,7 +28,7 @@ Once you've identified analyses that you want to replicate or modify, click the 
 
 ###About the Data
 
-The data visualizations in the Human Capital Analysis series use a synthetic dataset with four years of data for a fictitious school district. There is one record for each teacher in a given school year. Each record includes data about demographics, credentials, teaching experience, job assignments, evaluation scores, and new hire and retention status, as well as information about the schools to which teachers are assigned. 
+The data visualizations in the Human Capital Analysis series use a synthetic dataset with four years of data for a fictitious school district. There is one record for each teacher in a given school year. Each record includes data about demographics, credentials, teaching experience, job assignments, evaluation scores, and new hire and retention status, as well as information about the schools to which teachers are assigned. The recruitment guide also uses a student data file for demographic information.
 
 ###About the Analyses
 

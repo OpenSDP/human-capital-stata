@@ -1,5 +1,5 @@
 ---
-title: "Teacher Turnover by School Poverty Quartile"
+title: "Compare Teacher Turnover Rates Across School Poverty Quartiles"
 output: 
   html_document:
     theme: simplex
@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home]() / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Teacher Turnover by School Poverty Quartile
+[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Compare Teacher Turnover Rates Across School Poverty Quartiles
 
 ![](Teacher_Turnover_by_School_Poverty_Quartile.png)
 
@@ -219,6 +219,6 @@ graph export "$graphs\Retention_by_Poverty_Quartile.emf", replace
 
 ---
 
-Previous Analysis: [Teacher Turnover by School Year](Teacher_Turnover_by_School_Year.html)
+Previous Analysis: [Examine Teacher Turnover Across School Years](Teacher_Turnover_by_School_Year.html)
 
-Next Analysis: [Teacher Turnover by Teacher Effectiveness Tercile](Teacher_Turnover_by_Teacher_Effectiveness_Tercile.html)
+Next Analysis: [Compare Teacher Turnover Rates Across Teacher Effectiveness Terciles](Teacher_Turnover_by_Teacher_Effectiveness_Tercile.html)

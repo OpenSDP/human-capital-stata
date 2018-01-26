@@ -1,5 +1,5 @@
 ---
-title: "Teacher Turnover by Teacher Effectiveness Tercile"
+title: "Compare Teacher Turnover Rates Across Teacher Effectiveness Terciles"
 output: 
   html_document:
     theme: simplex
@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home]() / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Teacher Turnover by Teacher Effectiveness Tercile
+[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Compare Teacher Turnover Rates Across Teacher Effectiveness Terciles
 
 ![](Teacher_Turnover_by_Teacher_Effectiveness_Tercile.png)
 
@@ -256,6 +256,6 @@ graph export "$graphs\Retention_by_Effectiveness_Tercile_`subj_title'.emf", repl
 
 ---
 
-Previous Analysis: [Teacher Turnover by School Poverty Quartile](Teacher_Turnover_by_School_Poverty_Quartlie.html)
+Previous Analysis: [Compare Teacher Turnover Rates Across School Poverty Quartiles](Teacher_Turnover_by_School_Poverty_Quartlie.html)
 
-Next Analysis: [Novice Teacher Retention Trajectory](Novice_Teacher_Retention_Trajectory.html)
+Next Analysis: [Examine the Retention Trajectory for Novice Teachers](Novice_Teacher_Retention_Trajectory.html)

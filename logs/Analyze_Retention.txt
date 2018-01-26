@@ -1,7 +1,9 @@
 
 
-. graph export "docs\Share_of_Teachers_and_Students_by_Race.png", replace
-(file docs\Share_of_Teachers_and_Students_by_Race.png written in PNG format)
+. graph export "docs\Teacher_Turnover_by_Teacher_Effectiveness_Tercile.png", re
+> place
+(file docs\Teacher_Turnover_by_Teacher_Effectiveness_Tercile.png written in PNG
+>  format)
 
 . 
 end of do-file

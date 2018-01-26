@@ -14,7 +14,41 @@ output:
 </div>
 </div>
 
-[OpenSDP Home](opensdp.github.io)  /  Human Capital Analysis: Retention
+[OpenSDP Home](http://opensdp.github.io)  /  Human Capital Analysis: Retention
+
+# Analyses
+
+##[1. Calculate Average Annual Teacher Retention](Average_Annual_Teacher_Retention.html) {.chart-index-element}
+
+[![](Average_Annual_Teacher_Retention.png)](Average_Annual_Teacher_Retention.html)
+
+Describes the overall annual shares of teachers who stay in the same school, transfer, and leave teaching in the agency.
+
+##[2. Examine Teacher Turnover Across School Years](Teacher_Turnover_by_School_Year.html) {.chart-index-element}
+
+[![](Teacher_Turnover_by_School_Year.png)](Teacher_Turnover_by School_Year.html)
+
+Describes the shares of teachers who transfer and leave over time.
+
+##[3. Compare Teacher Turnover Rates Across School Poverty Quartiles](Teacher_Turnover_by_School_Poverty_Quartile.html) {.chart-index-element}
+
+[![](Teacher_Turnover_by_School_Poverty_Quartile.png)](Teacher_Turnover_by_School_Poverty_Quartile.html)
+
+Examines the extent to which retention patterns differ according to school poverty characteristics.
+
+##[4. Compare Teacher Turnover Rates Across Teacher Effectiveness Terciles](Teacher_Turnover_by_Teacher_Effectiveness_Tercile.html) {.chart-index-element}
+
+[![](Teacher_Turnover_by_Teacher_Effectiveness_Tercile.png)](Teacher_Turnover_by_Teacher_Effectiveness_Tercile.html)
+
+Examines whether the most and least effective teachers are being differentially retained.
+
+##[5. Examine the Retention Trajectory for Novice Teachers](Novice_Teacher_Retention_Trajectory.html) {.chart-index-element}
+
+[![](Novice_Teacher_Retention_Trajectory.png)](Novice_Teacher_Retention_Trajectory.html)
+
+Describes the retention trajectory of a cohort of novice teachers.
+
+#<br style="clear:both">Getting Started
 
 ###Objective
 
@@ -37,35 +71,3 @@ Schools invest substantial resources recruiting, developing, and retaining high-
 ###Giving Feedback on the Guide
 
 This guide is an open-source document hosted on Github and generated using the R Statamarkdown package. We welcome feedback, corrections, additions, and updates. Please visit the OpenSDP human capital analysis repository to read our contributor guidelines.
-
-### Contents
-
-##[1. Average Annual Teacher Retention](Average_Annual_Teacher_Retention.html) {.chart-index-element}
-
-[![](Average_Annual_Teacher_Retention.png)](Average_Annual_Teacher_Retention.html)
-
-Describes the overall annual shares of teachers who stay in the same school, transfer, and leave teaching in the agency.
-
-##[2. Teacher Turnover by School Year](Teacher_Turnover_by_School_Year.html) {.chart-index-element}
-
-[![](Teacher_Turnover_by_School_Year.png)](Teacher_Turnover_by School_Year.html)
-
-Describes the shares of teachers who transfer and leave over time.
-
-##[3. Teacher Turnover by School Poverty Quartile](Teacher_Turnover_by_School_Poverty_Quartile.html) {.chart-index-element}
-
-[![](Teacher_Turnover_by_School_Poverty_Quartile.png)](Teacher_Turnover_by_School_Poverty_Quartile.html)
-
-Examines the extent to which retention patterns differ according to school poverty characteristics.
-
-##[4. Teacher Turnover by Teacher Effectiveness Tercile](Teacher_Turnover_by_Teacher_Effectiveness_Tercile.html) {.chart-index-element}
-
-[![](Teacher_Turnover_by_Teacher_Effectiveness_Tercile.png)](Teacher_Turnover_by_Teacher_Effectiveness_Tercile.html)
-
-Examines whether the most and least effective teachers are being differentially retained.
-
-##[5. Novice Teacher Retention Trajectory](Novice_Teacher_Retention_Trajectory.html) {.chart-index-element}
-
-[![](Novice_Teacher_Retention_Trajectory.png)](Novice_Teacher_Retention_Trajectory.html)
-
-Describes the retention trajectory of a cohort of novice teachers.

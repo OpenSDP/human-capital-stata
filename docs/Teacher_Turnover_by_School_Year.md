@@ -1,5 +1,5 @@
 ---
-title: "Teacher Turnover by School Year"
+title: "Examine Teacher Turnover Across School Years"
 output: 
   html_document:
     theme: simplex
@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home]() / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Teacher Turnover by School Year
+[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Examine Teacher Turnover Across School Years
 
 ![](Teacher_Turnover_by_School_Year.png)
 
@@ -212,6 +212,6 @@ graph export "$graphs\Retention_by_School_Year.emf", replace
 
 ---
 
-Previous Analysis: [Average Annual Teacher Retention](Average_Annual_Teacher_Retention.html)
+Previous Analysis: [Calculate Average Annual Teacher Retention](Average_Annual_Teacher_Retention.html)
 
-Next Analysis: [Teacher Turnover by School Poverty Quartile](Teacher_Turnover_by_School_Poverty_Quartile.html)
+Next Analysis: [Compare Teacher Turnover Rates Across School Poverty Quartiles](Teacher_Turnover_by_School_Poverty_Quartile.html)

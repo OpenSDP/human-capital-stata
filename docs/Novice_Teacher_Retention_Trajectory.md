@@ -1,5 +1,5 @@
 ---
-title: "Novice Teacher Retention Trajectory"
+title: "Examine the Retention Trajectory for Novice Teachers"
 output: 
   html_document:
     theme: simplex
@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home]() / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Novice Teacher Retention Trajectory
+[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Examine the Retention Trajectory for Novice Teachers
 
 ![](Novice_Teacher_Retention_Trajectory.png)
 
@@ -229,4 +229,4 @@ graph export "$graphs\Novice_Teacher_Retention_Trajectory.emf", replace
 
 ---
 
-Previous Analysis: [Teacher Turnover by Teacher Effectiveness Tercile](Teacher_Turnover_by_Teacher_Effectiveness_Tercile.html)
+Previous Analysis: [Compare Teacher Turnover Rates Across Teacher Effectiveness Terciles](Teacher_Turnover_by_Teacher_Effectiveness_Tercile.html)

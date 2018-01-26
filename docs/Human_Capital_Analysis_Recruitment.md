@@ -14,21 +14,9 @@ output:
 </div>
 </div>
 
-[OpenSDP Home]()  /  Human Capital Analysis: Recruitment
+[OpenSDP Home](http://opensdp.github.io)  /  Human Capital Analysis: Recruitment
 
-###Objective
-
-Schools invest substantial resources recruiting, developing, and retaining high-quality teachers. These analyses reveal how retention patterns vary by school characteristics and by teacher effectiveness categories. Because novice teachers typically experience high rates of turnover, retention analyses often focus on the retention patterns of novice teachers.
-
-###Using this Guide
-
-The Human Capital Analysis: Retention series is a set of guides, code, and sample data about policy-relevant teacher retention topics. Each guide page includes an analysis in the form of a chart together with the Stata analysis and graphing code to generate the chart.
-
-###About the Data
-
-The data visualizations in this series use a synthetically generated sample data file.
-
-### Contents
+# Analyses
 
 ##[1. Share of Teachers Who Are New Hires](Share_of_Teachers_Who_Are_New_Hires.html) {.chart-index-element}
 
@@ -53,3 +41,27 @@ Examines the extent to which new hires are distributed unevenly across the agenc
 [![](Share_of_Teachers_and_Students_by_Race.png)](Share_of_Teachers_and_Students_by_Race.html)
 
 Compares the shares of all teachers, newly hired teachers, and students by race.
+
+#<br style="clear:both">Getting Started
+
+###Objective
+
+In this guide you will examine teacher hiring patterns, including the teaching experience of new hires, demographic characteristics of teachers and students, and the share of new hires by year and school poverty level.
+
+###Using this Guide
+
+The Human Capital Analysis series is a set of guides, code, and sample data about policy-relevant teacher workforce topics. Browse this and other guides in the series for ideas about ways to investigate critical points in teaching careers such as recruitment, placement, development, evaluation, and retention. Each guide includes several analyses in the form of charts together with Stata analysis and graphing code to generate each chart.
+
+Once you've identified analyses that you want to replicate or modify, click the "Download" buttons to download Stata code and sample data. You can make changes to the charts using the code and sample data, or modify the code to work with your own data. If you're familiar with Github you can click "Go to Repository" and clone the entire Human Capital Analysis repository to your own computer.
+
+###About the Data
+
+The data visualizations in the Human Capital Analysis series use a synthetic dataset with four years of data for a fictitious school district. There is one record for each teacher in a given school year. Each record includes data about demographics, credentials, teaching experience, job assignments, evaluation scores, and new hire and retention status, as well as information about the schools to which teachers are assigned. The recruitment guide also uses a student data file for demographic information.
+
+###About the Analyses
+
+The recruitment process is the first opportunity education agencies have to secure highly effective teachers for their students. This guide documents the kinds of teachers the agency hires (e.g., novices and experienced new hires), their demographic characteristics, and their distribution within the agency. Analyzing recruitment trends can provide direction for a human resource strategy that aims to attract and place highly effective teachers in all classrooms.
+
+###Giving Feedback on the Guide
+
+This guide is an open-source document hosted on Github and generated using the R Statamarkdown package. We welcome feedback, corrections, additions, and updates. Please visit the OpenSDP human capital analysis repository to read our contributor guidelines.

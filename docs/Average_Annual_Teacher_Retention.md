@@ -1,5 +1,5 @@
 ---
-title: "Average Annual Teacher Retention"
+title: "Calculate Average Annual Teacher Retention"
 output: 
   html_document:
     theme: simplex
@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home]() / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Average Annual Teacher Retention
+[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Calculate Average Annual Teacher Retention
 
 ![](Average_Annual_Teacher_Retention.png)
 
@@ -174,4 +174,4 @@ graph export "$graphs\Average_Teacher_Retention.emf", replace
 
 ---
 
-Next Analysis: [Teacher Turnover by School Year](Teacher_Turnover_by_School_Year.html)
+Next Analysis: [Examine Teacher Turnover Across School Years](Teacher_Turnover_by_School_Year.html)

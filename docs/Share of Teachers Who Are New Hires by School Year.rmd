@@ -231,3 +231,5 @@ graph export "docs\Share_of_Teachers_Who_Are_New_Hires_by_School_Year.png", repl
 ---
 
 Previous Analysis: [Share of Teachers Who Are New Hires](Share_of_Teachers_Who_Are_New_Hires.html)
+
+Next Analysis: [Share of Teachers Who Are New Hires by School Poverty Level](Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.html)

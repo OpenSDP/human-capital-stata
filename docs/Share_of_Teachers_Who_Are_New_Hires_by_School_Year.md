@@ -193,9 +193,8 @@ twoway (bar t_total school_year,
 	graphregion(color(white) fcolor(white) lcolor(white)) 
 	plotregion(color(white) fcolor(white) lcolor(white) margin(2 0 2 0))
 	note(" " "*Significantly different from 2012-2013 value, at the 95 percent confidence level."
-"Notes: Sample includes teachers in the 2012-13 through 2014-15 school years, with `teacher_years' teacher years and `unique_teachers' unique teachers." 
-"Novices were in their first year of teaching.", 
-size(vsmall) span);
+    "Notes: Sample includes teachers in the 2012-13 through 2014-15 school years, with `teacher_years' teacher years and `unique_teachers' unique teachers." 
+    "Novices were in their first year of teaching.", size(vsmall) span);
 #delimit cr
 ```
 
@@ -213,3 +212,5 @@ size(vsmall) span);
 ---
 
 Previous Analysis: [Share of Teachers Who Are New Hires](Share_of_Teachers_Who_Are_New_Hires.html)
+
+Next Analysis: [Share of Teachers Who Are New Hires by School Poverty Level](Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.html)

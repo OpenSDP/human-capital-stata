@@ -722,7 +722,6 @@ if ${share_teachers_stu_race}==1 {
 		matrix race[`i', 4] = 100 * r(mean)
 		local i = `i' + 1
 	}
-	*/
 	
 	// Step 14: Replace the dataset with the matrix of results.
 	
@@ -748,7 +747,7 @@ if ${share_teachers_stu_race}==1 {
 			size(medsmall) region(lstyle(none) lcolor(none) color(none)))
 		graphregion(color(white) fcolor(white) lcolor(white))
 		plotregion(color(white) fcolor(white) lcolor(white) margin(5 5 2 0))
-		note(" " "Notes: Sample includes teachers in the 2007-08 through 2010-11 school 
+		note(" " "Notes: Sample includes teachers in the 2011-12 through 2012-13 school 
 years, with `teacher_years' teacher years, `unique_teachers' unique teachers," 
 "`student_years' student years, and `unique_students' unique students.", size(vsmall) 
 span);		

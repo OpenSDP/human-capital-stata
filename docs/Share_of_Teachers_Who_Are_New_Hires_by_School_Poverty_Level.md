@@ -218,4 +218,4 @@ If marker labels need to be moved by hand using Stata Graph Editor, re-save .gph
 
 Previous Analysis: [Share of Teachers Who Are New Hires](Share_of_Teachers_Who_Are_New_Hires_by_School_Year.html)
 
-Next Analysis: [next]()
+Next Analysis: [Share of Teachers and Students by Race](Share_of_Teachers_and_Students_by_Race.html)

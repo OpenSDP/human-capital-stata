@@ -50,7 +50,7 @@ log using "${log}\Analyze_Retention.txt", text replace
 </div>
 </div>
 
-[OpenSDP Home]() / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Average Annual Teacher Retention
+[OpenSDP Home](opensdp.github.io) / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Average Annual Teacher Retention
 
 ![](Average_Annual_Teacher_Retention.png)
 

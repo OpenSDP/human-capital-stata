@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  C:\working_files\human-capital-stata\logs\Analyze_Recruitment.txt
   log type:  text
- opened on:  23 Jan 2018, 14:13:13
+ opened on:  26 Jan 2018, 17:35:46
 
 . 
 .         // Set program switches for recruitment analyses. Set switch to 0 to skip the 
@@ -194,10 +194,10 @@ delimiter now ;
 >                         region(lstyle(none) lcolor(none) color(none))) 
 >                 graphregion(color(white) fcolor(white) lcolor(white)) 
 >                 plotregion(color(white) fcolor(white) lcolor(white) margin(2 0 2 0))
->                 note(" " "*Significantly different from 2008 value, at the 95 percent confidence 
-> level." "Notes: Sample includes teachers in the 2012-13 through 2014-15 school 
-> years, with `teacher_years' teacher years and `unique_teachers' unique teachers.
-> Novices were in" "their first year of teaching.", size(vsmall) span);
+>                 note(" " "*Significantly different from 2012-2013 value, at the 95 percent confidence level."
+>                         "Notes: Sample includes teachers in the 2012-13 through 2014-15 school years, with `teacher_years' teacher years and `unique_teachers' unique teachers.
+> " 
+>                         "Novices were in their first year of teaching.", size(vsmall) span);
 .         #delimit cr
 delimiter now cr
 .         
@@ -345,8 +345,8 @@ delimiter now cr
 .         // Step 10: Save the chart in Stata Graph and EMF formats. If marker labels need to be
 .         // moved by hand using Stata Graph Editor, re-save .gph and .emf files after editing.
 .         
-.         graph export "${graphs}/New Hires_by_Poverty_Quartile.emf", replace 
-.         graph save "${graphs}/New Hires_by_Poverty_Quartile.gph", replace 
+.         graph export "${graphs}/New_Hires_by_Poverty_Quartile.emf", replace 
+.         graph save "${graphs}/New_Hires_by_Poverty_Quartile.gph", replace 
 . 
 . }
 
@@ -828,10 +828,10 @@ Duplicates in terms of all variables
 .         
 .         // Step 9: Restrict the student sample.
 .         
-.         keep if school_year > 2011
-(559,833 observations deleted)
+.         keep if school_year > 2012
+(703,563 observations deleted)
 .         keep if !missing(s_race_ethnicity)
-(358 observations deleted)
+(145 observations deleted)
 .         
 .         // Step 10: Review student variables.
 .         tab school_year s_race_ethnicity, mi
@@ -839,10 +839,9 @@ Duplicates in terms of all variables
     School |                              Race and Ethnicity
       Year | African A  Asian Ame   Hispanic  American       White   Multiple          9 |     Total
 -----------+-----------------------------------------------------------------------------+----------
-      2012 |    37,958      8,287     19,326        425     72,516      4,952         53 |   143,517 
       2013 |    40,615      9,141     21,451        489     76,544      5,212         71 |   153,523 
 -----------+-----------------------------------------------------------------------------+----------
-     Total |    78,573     17,428     40,777        914    149,060     10,164        124 |   297,040 
+     Total |    40,615      9,141     21,451        489     76,544      5,212         71 |   153,523 
 
 .         
 .         // Step 11: Create dummy variables for major student race/ethnicity categories.
@@ -858,16 +857,16 @@ Duplicates in terms of all variables
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-         sid |    297,040    197744.1    79614.01      60004     335715
+         sid |    153,523    197783.1    79614.28      60004     335715
 .         local student_years = string(r(N), "%9.0fc")
 .         preserve
 .                 bys sid: keep if _n == 1
-(128,837 observations deleted)
+(0 observations deleted)
 .                 summ sid
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-         sid |    168,203    197786.4    79619.62      60004     335715
+         sid |    153,523    197783.1    79614.28      60004     335715
 .                 local unique_students = string(r(N), "%9.0fc")
 .         restore
 .         
@@ -882,20 +881,19 @@ Duplicates in terms of all variables
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-     s_white |    297,040    .5018179    .4999975          0          1
+     s_white |    153,523    .4985833    .4999996          0          1
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-     s_black |    297,040    .2645199     .441078          0          1
+     s_black |    153,523    .2645532    .4410964          0          1
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    s_latino |    297,040    .1372778     .344141          0          1
+    s_latino |    153,523     .139725    .3467026          0          1
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-     s_asian |    297,040    .0586722    .2350106          0          1
-.         */
+     s_asian |    153,523    .0595416    .2366363          0          1
 .         
 .         // Step 14: Replace the dataset with the matrix of results.
 .         
@@ -913,7 +911,7 @@ delimiter now ;
 >                 bar(1, fcolor(dknavy) lcolor(dknavy)) 
 >                 bar(2, fcolor(dknavy*.7) lcolor(dknavy*.7)) 
 >                 bar(3, fcolor(maroon) lcolor(maroon))
->                 blabel(bar, position(inside) color(white) format(%10.0f))
+>                 blabel(bar, position(outside) color(black) format(%10.0f))
 >                 over(race, relabel(1 "White" 2 "Black" 3 "Latino" 4 "Asian") 
 >                         label(labsize(medsmall)))
 >                 title("Share of Teachers and Students", span)
@@ -921,13 +919,12 @@ delimiter now ;
 >                 ytitle("Percent", size(medsmall))
 >                 ylabel(0(20)100, labsize(medsmall) nogrid)
 >                 legend(order(1 "All Teachers" 2 "Newly Hired Teachers" 3 "Students")
->                         ring(0) position(11) symxsize(2) symysize(2) rows(3)
+>                         position(6) symxsize(2) symysize(2) rows(1)
 >                         size(medsmall) region(lstyle(none) lcolor(none) color(none)))
 >                 graphregion(color(white) fcolor(white) lcolor(white))
 >                 plotregion(color(white) fcolor(white) lcolor(white) margin(5 5 2 0))
->                 note(" " "Notes: Sample includes teachers in the 2007-08 through 2010-11 school 
-> years, with `teacher_years' teacher years, `unique_teachers' unique teachers," 
-> "`student_years' student years, and `unique_students' unique students.", size(vsmall) 
+>                 note(" " "Notes: Sample includes teachers and students in the 2012-13 school year, 
+> with `unique_teachers' unique teachers and `unique_students' unique students.", size(vsmall) 
 > span);
 .                         #delimit cr
 delimiter now cr
@@ -945,5 +942,5 @@ delimiter now cr
       name:  <unnamed>
        log:  C:\working_files\human-capital-stata\logs\Analyze_Recruitment.txt
   log type:  text
- closed on:  23 Jan 2018, 14:13:28
+ closed on:  26 Jan 2018, 17:36:01
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

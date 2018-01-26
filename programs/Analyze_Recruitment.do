@@ -46,9 +46,9 @@
 	// Set program switches for recruitment analyses. Set switch to 0 to skip the 
 	// section of code that runs a given analysis, and to 1 to run the analysis.
 	
-	global new_hires_pie	 			= 1
-	global new_hires_year				= 1
-	global new_hires_school_poverty 	= 1
+	global new_hires_pie	 			= 0
+	global new_hires_year				= 0
+	global new_hires_school_poverty 	= 0
 	global teacher_effects_cert_pathway	= 0
 	global share_teachers_stu_race		= 1
 
@@ -369,8 +369,8 @@ and `unique_teachers' unique teachers. Novices were" "in their first year of tea
 	// Step 10: Save the chart in Stata Graph and EMF formats. If marker labels need to be
 	// moved by hand using Stata Graph Editor, re-save .gph and .emf files after editing.
 	
-	graph export "${graphs}/New Hires_by_Poverty_Quartile.emf", replace 
-	graph save "${graphs}/New Hires_by_Poverty_Quartile.gph", replace 
+	graph export "${graphs}/New_Hires_by_Poverty_Quartile.emf", replace 
+	graph save "${graphs}/New_Hires_by_Poverty_Quartile.gph", replace 
 
 }
 	
@@ -691,7 +691,7 @@ if ${share_teachers_stu_race}==1 {
 	
 	// Step 9: Restrict the student sample.
 	
-	keep if school_year > 2011
+	keep if school_year > 2012
 	keep if !missing(s_race_ethnicity)
 	
 	// Step 10: Review student variables.
@@ -735,7 +735,7 @@ if ${share_teachers_stu_race}==1 {
 		bar(1, fcolor(dknavy) lcolor(dknavy)) 
 		bar(2, fcolor(dknavy*.7) lcolor(dknavy*.7)) 
 		bar(3, fcolor(maroon) lcolor(maroon))
-		blabel(bar, position(inside) color(white) format(%10.0f))
+		blabel(bar, position(outside) color(black) format(%10.0f))
 		over(race, relabel(1 "White" 2 "Black" 3 "Latino" 4 "Asian") 
 			label(labsize(medsmall)))
 		title("Share of Teachers and Students", span)
@@ -743,13 +743,12 @@ if ${share_teachers_stu_race}==1 {
 		ytitle("Percent", size(medsmall))
 		ylabel(0(20)100, labsize(medsmall) nogrid)
 		legend(order(1 "All Teachers" 2 "Newly Hired Teachers" 3 "Students")
-			ring(0) position(11) symxsize(2) symysize(2) rows(3)
+			position(6) symxsize(2) symysize(2) rows(1)
 			size(medsmall) region(lstyle(none) lcolor(none) color(none)))
 		graphregion(color(white) fcolor(white) lcolor(white))
 		plotregion(color(white) fcolor(white) lcolor(white) margin(5 5 2 0))
-		note(" " "Notes: Sample includes teachers in the 2011-12 through 2012-13 school 
-years, with `teacher_years' teacher years, `unique_teachers' unique teachers," 
-"`student_years' student years, and `unique_students' unique students.", size(vsmall) 
+		note(" " "Notes: Sample includes teachers and students in the 2012-13 school year, 
+with `unique_teachers' unique teachers and `unique_students' unique students.", size(vsmall) 
 span);		
 	#delimit cr
 	

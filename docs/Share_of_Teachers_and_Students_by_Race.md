@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home]() / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Share of Teachers and Students by Race
+[OpenSDP Home](opensdp.github.io) / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Share of Teachers and Students by Race
 
 ![](Share_of_Teachers_and_Students_by_Race.png)
 
@@ -165,7 +165,7 @@ isid sid school_year
 
 
 ```stata
-keep if school_year > 2011
+keep if school_year > 2012
 keep if !missing(s_race_ethnicity)
 ```
 
@@ -234,7 +234,7 @@ graph bar teacher new_teacher student,
 	bar(1, fcolor(dknavy) lcolor(dknavy)) 
 	bar(2, fcolor(dknavy*.7) lcolor(dknavy*.7)) 
 	bar(3, fcolor(maroon) lcolor(maroon))
-	blabel(bar, position(inside) color(white) format(%10.0f))
+	blabel(bar, position(outside) color(black) format(%10.0f))
 	over(race, relabel(1 "White" 2 "Black" 3 "Latino" 4 "Asian") 
 		label(labsize(medsmall)))
 	title("Share of Teachers and Students", span)
@@ -242,13 +242,12 @@ graph bar teacher new_teacher student,
 	ytitle("Percent", size(medsmall))
 	ylabel(0(20)100, labsize(medsmall) nogrid)
 	legend(order(1 "All Teachers" 2 "Newly Hired Teachers" 3 "Students")
-		ring(0) position(11) symxsize(2) symysize(2) rows(3)
+		position(6) symxsize(2) symysize(2) rows(1)
 		size(medsmall) region(lstyle(none) lcolor(none) color(none)))
 	graphregion(color(white) fcolor(white) lcolor(white))
 	plotregion(color(white) fcolor(white) lcolor(white) margin(5 5 2 0))
-	note(" " "Notes: Sample includes teachers in the 2011-12 through 2012-13 school 
-years, with `teacher_years' teacher years, `unique_teachers' unique teachers," 
-"`student_years' student years, and `unique_students' unique students.", size(vsmall) 
+	note(" " "Notes: Sample includes teachers and students in the 2012-13 school year, 
+with `unique_teachers' unique teachers and `unique_students' unique students.", size(vsmall) 
 span);		
 #delimit cr
 ```

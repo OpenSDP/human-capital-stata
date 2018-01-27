@@ -1,5 +1,5 @@
 ---
-title: "Share of Teachers Who Are New Hires by School Year"
+title: "Examine the Share of New Hires Across School Years"
 output: 
   html_document:
     theme: simplex
@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home]() / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Share of Teachers Who Are New Hires by School Year
+[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Examine the Share of New Hires Across School Years
 
 ![](Share_of_Teachers_Who_Are_New_Hires_by_School_Year.png)
 
@@ -180,7 +180,7 @@ twoway (bar t_total school_year,
 	(scatter t_novice school_year, 
 		mcolor(none) mlabel(t_novice_label) mlabcolor(white) mlabpos(6)  
 		mlabsize(small)), 
-	title("Share of Teachers Who Are New Hires", span) 
+	title("Calculate the Share of Teachers Who Are New Hires", span) 
 	subtitle("by School Year", span) 
 	ytitle("Percent of Teachers") 
 	ylabel(0(10)60, nogrid labsize(medsmall)) 
@@ -211,6 +211,6 @@ twoway (bar t_total school_year,
 
 ---
 
-Previous Analysis: [Share of Teachers Who Are New Hires](Share_of_Teachers_Who_Are_New_Hires.html)
+Previous Analysis: [Calculate the Share of Teachers Who Are New Hires](Share_of_Teachers_Who_Are_New_Hires.html)
 
-Next Analysis: [Share of Teachers Who Are New Hires by School Poverty Level](Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.html)
+Next Analysis: [Compare the Shares of New Hires Across School Poverty Quartiles](Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.html)

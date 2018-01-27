@@ -1,5 +1,5 @@
 ---
-title: "Share of Teachers Who Are New Hires by School Poverty Level"
+title: "Compare the Shares of New Hires Across School Poverty Quartiles"
 output: 
   html_document:
     theme: simplex
@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home]() / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Share of Teachers Who Are New Hires by School Poverty Level
+[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Compare the Shares of New Hires Across School Poverty Quartiles
 
 ![](Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.png)
 
@@ -181,7 +181,7 @@ twoway (bar t_total school_poverty_quartile,
 	(scatter t_novice school_poverty_quartile, 
 		mcolor(none) mlabel(t_novice_label) mlabcolor(white) mlabpos(6)  
 		mlabsize(small)), 
-	title("Share of Teachers Who Are New Hires", span) 
+	title("Calculate the Share of Teachers Who Are New Hires", span) 
 	subtitle("by School FRPL Quartile", span) 
 	ytitle("Percent of Teachers") 
 	ylabel(0(10)60, nogrid labsize(medsmall)) 
@@ -216,6 +216,6 @@ If marker labels need to be moved by hand using Stata Graph Editor, re-save .gph
 
 ---
 
-Previous Analysis: [Share of Teachers Who Are New Hires](Share_of_Teachers_Who_Are_New_Hires_by_School_Year.html)
+Previous Analysis: [Examine the Share of New Hires Across School Years](Share_of_Teachers_Who_Are_New_Hires_by_School_Year.html)
 
-Next Analysis: [Share of Teachers and Students by Race](Share_of_Teachers_and_Students_by_Race.html)
+Next Analysis: [Examine the Distribution of Teachers and Students by Race](Share_of_Teachers_and_Students_by_Race.html)

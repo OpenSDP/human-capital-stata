@@ -18,25 +18,25 @@ output:
 
 # Analyses
 
-##[1. Share of Teachers Who Are New Hires](Share_of_Teachers_Who_Are_New_Hires.html) {.chart-index-element}
+##[1. Calculate the Share of Teachers Who Are New Hires](Share_of_Teachers_Who_Are_New_Hires.html) {.chart-index-element}
 
 [![](Share_of_Teachers_Who_Are_New_Hires.png)](Share_of_Teachers_Who_Are_New_Hires.html)
 
 Describes the overall shares of novice and experienced new hires.
 
-##[2. Share of Teachers Who Are New Hires by School Year](Share_of_Teachers_Who_Are_New_Hires_by_School_Year.html) {.chart-index-element}
+##[2. Examine the Share of New Hires Across School Years](Share_of_Teachers_Who_Are_New_Hires_by_School_Year.html) {.chart-index-element}
 
 [![](Share_of_Teachers_Who_Are_New_Hires_by_School_Year.png)](Share_of_Teachers_Who_Are_New_Hires_by_School_Year.html)
 
 Describes the share of novice and experienced new hires by year.
 
-##[3. Share of Teachers Who Are New Hires by School Poverty Level](Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.html) {.chart-index-element}
+##[3. Compare the Shares of New Hires Across School Poverty Quartiles](Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.html) {.chart-index-element}
 
 [![](Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.png)](Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.html)
 
 Examines the extent to which new hires are distributed unevenly across the agency according to school poverty characteristics.
 
-##[4. Share of Teachers and Students by Race](Share_of_Teachers_and_Students_by_Race.html) {.chart-index-element}
+##[4. Examine the Distribution of Teachers and Students by Race](Share_of_Teachers_and_Students_by_Race.html) {.chart-index-element}
 
 [![](Share_of_Teachers_and_Students_by_Race.png)](Share_of_Teachers_and_Students_by_Race.html)
 

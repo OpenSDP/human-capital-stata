@@ -1,5 +1,5 @@
 ---
-title: "Share of Teachers and Students by Race"
+title: "Examine the Distribution of Teachers and Students by Race"
 output: 
   html_document:
     theme: simplex
@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Share of Teachers and Students by Race
+[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Examine the Distribution of Teachers and Students by Race
 
 ![](Share_of_Teachers_and_Students_by_Race.png)
 
@@ -264,4 +264,4 @@ graph save "${graphs}/Share_Teachers_Students_by_Race.gph", replace
 
 ---
 
-Previous Analysis: [Share of Teachers Who Are New Hires by School Poverty Level](Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.html)
+Previous Analysis: [Compare the Shares of New Hires Across School Poverty Quartiles](Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.html)

@@ -1,5 +1,5 @@
 ---
-title: "Share of Teachers Who Are New Hires"
+title: "Calculate the Share of Teachers Who Are New Hires"
 output: 
   html_document:
     theme: simplex
@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home]() / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Share of Teachers Who Are New Hires
+[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Calculate the Share of Teachers Who Are New Hires
 
 ![](Share_of_Teachers_Who_Are_New_Hires.png)
 
@@ -135,7 +135,7 @@ graph pie, over (pie_hire) angle(-50)
 	legend(off)
 	graphregion(color(white) fcolor(white) lcolor(white))
 	plotregion(color(white) fcolor(white) lcolor(white) margin(1 1 3 3))
-	title("Share of Teachers Who Are New Hires", span)
+	title("Calculate the Share of Teachers Who Are New Hires", span)
 	note(" " "Notes: Sample includes teachers in the 2012-13 through 2014-15 
 school years, with `teacher_years' teacher years and `unique_teachers' unique 
 teachers." "Novices were in their first year of teaching.", size(vsmall) span);
@@ -155,4 +155,4 @@ graph save "${graphs}/Share_of_Teachers_New_Hires.gph", replace
 
 ---
 
-Next Analysis: [Share of Teachers Who Are New Hires by School Year](Share_of_Teachers_Who_Are_New_Hires_by_School_Year.html)
+Next Analysis: [Examine the Share of New Hires Across School Years](Share_of_Teachers_Who_Are_New_Hires_by_School_Year.html)

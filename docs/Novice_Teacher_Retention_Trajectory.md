@@ -74,7 +74,7 @@ Restrict to years for which next-year retention status can be observed and to te
 
 
 ```stata
-keep if school_year >= 2012 & school_year <= 2015
+keep if school_year >= 2011 & school_year <= 2015
 keep if !missing(t_novice)
 ```
 
@@ -91,10 +91,10 @@ tab school_year t_novice, mi
 
 
 ```stata
-gen t_novice_2012 = school_year == 2012 & t_novice == 1
-bysort tid: egen max_t_novice_2012 = max(t_novice_2012)
-drop t_novice_2012
-rename max_t_novice_2012 t_novice_2012
+gen t_novice_2011 = school_year == 2011 & t_novice == 1
+bysort tid: egen max_t_novice_2011 = max(t_novice_2011)
+drop t_novice_2011
+rename max_t_novice_2011 t_novice_2011
 ```
 
 
@@ -104,7 +104,7 @@ Drop observations of teachers who reappear after leaving for one or more school 
 
 
 ```stata
-keep if t_novice_2012 == 1
+keep if t_novice_2011 == 1
 gen t_leave_year = school_year if t_leave == 1 
 bysort tid: egen min_t_leave_year = min(t_leave_year)
 drop if school_year > min_t_leave_year
@@ -115,7 +115,7 @@ drop if school_year > min_t_leave_year
 
 
 ```stata
-sum tid if school_year == 2012 
+sum tid if school_year == 2011 
 local unique_teachers = string(r(N), "%9.0fc")
 ```
 
@@ -124,10 +124,10 @@ local unique_teachers = string(r(N), "%9.0fc")
 
 
 ```stata
-gen school_code_2012 = school_code if school_year == 2012
-egen max_school_code_2012 = max(school_code_2012), by(tid)
-replace school_code_2012 = max_school_code_2012
-drop max_school_code_2012
+gen school_code_2011 = school_code if school_year == 2011
+egen max_school_code_2011 = max(school_code_2011), by(tid)
+replace school_code_2011 = max_school_code_2011
+drop max_school_code_2011
 ```
 
 
@@ -135,7 +135,7 @@ drop max_school_code_2012
 
 
 ```stata
-gen still_same_school = school_code == school_code_2012 
+gen still_same_school = school_code == school_code_2011 
 gen still_teach = 1
 tab school_year still_same_school, mi
 tab school_year still_teach, mi
@@ -147,10 +147,10 @@ tab school_year still_teach, mi
 
 ```stata
 collapse (sum) still_same_school still_teach (count) tid, by(school_year)
-gen cohort_count_2012 = tid if school_year == 2012
-egen max_cohort_count_2012 = max(cohort_count_2012)
-replace cohort_count_2012 = max_cohort_count_2012
-drop max_cohort_count_2012
+gen cohort_count_2011 = tid if school_year == 2011
+egen max_cohort_count_2011 = max(cohort_count_2011)
+replace cohort_count_2011 = max_cohort_count_2011
+drop max_cohort_count_2011
 ```
 
 
@@ -159,7 +159,7 @@ drop max_cohort_count_2012
 
 ```stata
 foreach var in still_same_school still_teach {
-	replace `var' = 100 * `var' / cohort_count_2012
+	replace `var' = 100 * `var' / cohort_count_2011
 	format `var' %9.0fc
 }
 ```
@@ -200,8 +200,8 @@ scatter still_same_school school_year,
 	xtitle("") 
 	yscale(range(0(20)100)) 
 	ylabel(0(20)100, nogrid format(%9.0f) labsize(medsmall)) 
-	xscale(range(2012(.1)2015.1)) 
-	xlabel(2012 "2011-12" 2013 "2012-13" 2014 "2013-14" 2015 "2014-15", 
+	xscale(range(2011(.1)2015.1)) 
+	xlabel(2011 "2010-11" 2012 "2011-12" 2013 "2012-13" 2014 "2013-14" 2015 "2014-15", 
 		labsize(medsmall)) 
 	legend(position(8) order(2 1) cols(1) symxsize(3) ring(0) size(medsmall) 
 		region(lstyle(none) lcolor(none) color(none))
@@ -212,7 +212,7 @@ scatter still_same_school school_year,
 		fcolor(white) lcolor(white))
 		
 	note(" " "Notes: Sample includes `unique_teachers' teachers who were in their
-first year of teaching in the 2011-12 school year.", span size(vsmall));
+first year of teaching in the 2010-11 school year.", span size(vsmall));
 
 #delimit cr
 ```

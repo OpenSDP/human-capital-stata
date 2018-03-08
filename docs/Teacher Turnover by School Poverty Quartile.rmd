@@ -104,7 +104,7 @@ preserve
 	collapse (mean) sch_frpl_pct, by(school_code school_year)
 	isid school_code school_year
 	gen school_poverty_quartile = .
-	forval year = 2012/2015 {
+	forval year = 2010/2015 {
 		xtile temp_poverty_quartile = sch_frpl_pct if school_year == `year', nq(4)
 		replace school_poverty_quartile = temp_poverty_quartile if school_year == `year'
 		drop temp_poverty_quartile
@@ -129,7 +129,7 @@ merge m:1 school_code school_year using `school_poverty_qrt', keep(1 2 3) nogen
 Keep only teachers in years for which next-year retention status can be calculated. Keep records with non-missing values for school poverty quartile.
 
 ```{stata, collectcode=TRUE, results="hide"}
-keep if school_year >= 2012 & school_year <= 2014 
+keep if school_year >= 2010 & school_year <= 2014 
 keep if !missing(school_poverty_quartile)
 assert !missing(t_stay, t_transfer, t_leave)
 ```
@@ -245,7 +245,7 @@ twoway bar t_transfer count,
 	
 	note("*Significantly different from schools in the lowest free and reduced 
 price lunch quartile, at the 95 percent confidence level." "Notes: Sample includes
-`teacher_years' teacher years and `unique_teachers' unique teachers in the 2011-12
+`teacher_years' teacher years and `unique_teachers' unique teachers in the 2009-10
 to 2013-14 school years. Retention analyses are based" "on one-year retention rates.",
 span size(vsmall));
 

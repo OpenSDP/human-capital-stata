@@ -1,0 +1,220 @@
+-------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\ems541\Documents\human-capital-stata\logs\Analyze_Evaluation.txt
+  log type:  text
+ opened on:   8 Mar 2018, 15:42:51
+
+. 
+.         // Set program switches for recruitment analyses. Set switch to 0 to skip the 
+.         // section of code that runs a given analysis, and to 1 to run the analysis.
+. 
+.         // Switches
+.         
+.         global overall_teacher_effects                                  = 1
+
+.         global predictive_teacher_effects_avg                   = 0
+
+.         global predictive_teacher_effects_dist                  = 0
+
+. 
+. /*** D1. Distribution of Teacher Effects ***/
+. 
+. if ${overall_teacher_effects} == 1 {
+. 
+.         // Step 1: Choose the subject (math or ela) and school level (elem or 
+.         // middle) for the analysis. Note: to make multiple charts at the same time, 
+.         // put loops for subject and level around the analysis and graphing code.
+.         // To include all grade levels in the analysis, comment out the local level 
+.         // command below.
+.         
+.         local subject m
+.         *local level middle
+.         
+.         // Step 2: Load the Teacher_Year_Analysis file containing value-added estimates.
+.         
+.         use "${analysis}/Teacher_Year_Analysis.dta", clear
+.         isid tid school_year
+.         
+.         // Step 3: Restrict the sample. Keep years for which teacher effects value added 
+.         // estimates are available. Keep only employees who are teachers. Keep only records 
+.         // for which teachers have pooled teacher effects estimates (pooled estimates use 
+.         // information from all available years for each teacher). If school level restriction 
+.         // is chosen, keep only records from either elementary or middle schools.
+.         
+.         keep if school_year >= 2010 & school_year <= 2015
+(0 observations deleted)
+.         keep if !missing(tre_`subject')
+(50,651 observations deleted)
+.         if "`level'" == "elem" {        
+.                 keep if school_lvl == "Elem"
+.         }
+.         if "`level'" == "middle" {
+.                 keep if school_lvl == "Mid"
+.         }
+. 
+.         // Step 4: Review variables.
+.         
+.         tab school_year
+
+School Year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       2010 |        997       16.37       16.37
+       2011 |      1,016       16.68       33.05
+       2012 |        980       16.09       49.15
+       2013 |        966       15.86       65.01
+       2014 |      1,039       17.06       82.07
+       2015 |      1,092       17.93      100.00
+------------+-----------------------------------
+      Total |      6,090      100.00
+.         bysort tid: gen tag = _n == 1
+.         summ tre_`subject' if tag == 1, detail
+
+            Math 2010-2015 Pooled Teacher Effects
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%     -.250807      -.3398095
+ 5%    -.1892487      -.3321132
+10%    -.1480517      -.3065061       Obs               2,266
+25%    -.0768438      -.2848039       Sum of Wgt.       2,266
+
+50%    -.0091541                      Mean          -.0020112
+                        Largest       Std. Dev.      .1168169
+75%     .0745983       .3925086
+90%     .1485148       .4333438       Variance       .0136462
+95%     .1990773       .5404382       Skewness       .3545142
+99%     .3026183       .5744016       Kurtosis       3.502438
+.         drop tag
+.         
+.         // Step 5: Change data from teacher-year uniqueness level to teacher level by keeping
+.         // only teacher id and pooled estimate and then dropping duplicate records.
+.         
+.         keep tid tre_`subject'
+.         duplicates drop tid tre_`subject'
+force option required with duplicates drop varlist
+r(198);
+.         isid tid
+.         
+.         // Step 6: Get sample size.
+. 
+.         summ tid
+.         local unique_teachers = string(r(N), "%9.0fc")
+.         
+.         // Step 7: Get and store values for percentiles and percentile differences.
+.         
+.         sum tre_`subject', detail
+.         local p10_`subject' = r(p10)
+.         local p25_`subject' = r(p25)
+.         local p75_`subject' = r(p75)
+.         local p90_`subject' = r(p90)
+. 
+.         local gap90 = round(`p90_`subject'' - `p10_`subject'', .01)
+.         local gap75 = round(`p75_`subject'' - `p25_`subject'', .01)
+. 
+.         // Step 8: Set positions for text labels, lines, and arrows.
+.         
+.         local gphtxt_10         = `p10_`subject'' - .02
+.         local gphtxt_25         = `p25_`subject'' - .02
+.         local gphtxt_75         = `p75_`subject'' + .02
+.         local gphtxt_90         = `p90_`subject'' + .02
+. 
+.         local lnht75            = 1.5
+.         local lnht90            = 0.5
+.         local txtht75           = `lnht75' + .3
+.         local txtht90           = `lnht90' + .3
+.         
+.         // Step 9: Define subject and school level titles.
+.         
+.         if "`subject'" == "math" {
+.                 local subj_foot "math"
+.                 local subj_title "Math"
+.         }
+.         
+.         if "`subject'" == "ela" {
+.                 local subj_foot "English/Language Arts"
+.                 local subj_title "ELA"
+.         }
+.         local gradespan "5th through 8th"
+. 
+.         if "`level'" == "middle" {
+.                 local subj_title "Middle School `subj_title'"
+.                 local gradespan "6th through 8th"
+.         }
+.         
+.         if "`level'" == "elem" {
+.                 local subj_title "Elementary School `subj_title'"
+.                 local gradespan "5th"
+.         }
+. 
+.         // Step 10: Make chart.
+.         
+.         #delimit ;
+delimiter now ;
+.         twoway (pcarrowi `lnht75' `p25_`subject'' `lnht75' `p75_`subject'',
+>                         color(cranberry) mlwidth(medthin) lwidth(medthin))
+>                 (pcarrowi `lnht75' `p75_`subject'' `lnht75' `p25_`subject'',
+>                         color(cranberry) mlwidth(medthin) lwidth(medthin))
+>                 (pcarrowi `lnht90' `p10_`subject'' `lnht90' `p90_`subject'',
+>                         color(green) mlwidth(medthin) lwidth(medthin))
+>                 (pcarrowi `lnht90' `p90_`subject'' `lnht90' `p10_`subject'',
+>                         color(green) mlwidth(medthin) lwidth(medthin))
+>                 (kdensity tre_`subject', color(navy) area(1) 
+>                         xline(`p25_`subject'', lpattern(dash) lcolor(cranberry))
+>                         xline(`p75_`subject'', lpattern(dash) lcolor(cranberry))
+>                         xline(`p10_`subject'', lpattern(dash) lcolor(green))
+>                         xline(`p90_`subject'', lpattern(dash) lcolor(green))),
+>                         
+>                 title("Distribution of `subj_title' Teacher Effects" " ", span)
+>                 xtitle("Teacher Effects", size(medsmall))
+>                 xscale(range(-.5(.25).5))
+>                 xlabel(-.5(.25).5, labsize(medsmall))
+>                 yscale(range(0(1)6))
+>                 ylabel(none)
+>                 text(5 `gphtxt_10' "10th percentile", orientation(vertical) size(small))
+>                 text(5 `gphtxt_25' "25th percentile", orientation(vertical) size(small))
+>                 text(5 `gphtxt_75' "75th percentile", orientation(vertical) size(small))
+>                 text(5 `gphtxt_90' "90th percentile", orientation(vertical) size(small))
+>                 text(`txtht75' 0 "`gap75'", size(medium) color(cranberry))
+>                 text(`txtht90' 0 "`gap90'", size(medium) color(green))
+>                 legend(off)
+>                 graphregion(color(white) fcolor(white) lcolor(white))
+>                 plotregion(color(white) fcolor(white) lcolor(white) margin(5 5 2 0))
+>                 
+>                 note(" " "Notes: Sample includes `unique_teachers' `gradespan' grade `subj_foot'
+> teachers in school years 2000-10 through 2013-14." "Teacher effects are measured in
+> student test score standard deviations, with teacher-specific shrinkage factors applied
+> to adjust for" "differences in sample reliability.", size(vsmall) span);
+.         #delimit cr     
+delimiter now cr
+.         
+.         // Step 11: Save chart.
+.         
+.         graph save "${graphs}\D1_Overall_Teacher_Effects_`subj_title'.gph" , replace
+.         graph export "${graphs}\D1_Overall_Teacher_Effects_`subj_title'.emf" , replace
+.                 
+. }
+r(198);
+
+end of do-file
+
+r(198);
+
+. duplicates drop varlist
+variable varlist not found
+r(111);
+
+. duplicates report
+
+Duplicates in terms of all variables
+
+--------------------------------------
+   copies | observations       surplus
+----------+---------------------------
+        1 |          768             0
+        2 |          956           478
+        3 |         1146           764
+        4 |          840           630
+        5 |          940           752
+        6 |         1440          1200
+--------------------------------------
+
+. exit, clear

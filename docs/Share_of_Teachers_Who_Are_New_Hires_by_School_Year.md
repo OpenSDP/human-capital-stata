@@ -73,9 +73,10 @@ Also generate veteran new hire indicator.
 
 
 ```stata
-keep if school_year > 2012
+keep if school_year > 2010
 keep if !missing(t_new_hire)
 keep if !missing(t_novice)
+keep if !missing(t_experience)
 	
 // Generate missing t_veteran_new_hire variable
 gen t_veteran_new_hire = 0 if !missing(t_experience)
@@ -115,15 +116,15 @@ restore
 ```stata
 foreach var in t_novice t_veteran_new_hire {
 	gen sig_`var' = .
-	xi: logit `var' i.school_year, robust
+	xi: reg `var' i.school_year, robust
 
-	forvalues year = 2014/2015 {
+	forvalues year = 2012/2015 {
 		replace sig_`var' = abs(_b[_Ischool_ye_`year'] / _se[_Ischool_ye_`year']) ///
 			if school_year == `year'
 		replace sig_`var' = 0 if sig_`var' <= 1.96 & school_year == `year'
 		replace sig_`var' = 1 if sig_`var' > 1.96 & school_year == `year'
 	}
-	replace sig_`var' = 0 if school_year == 2013
+	replace sig_`var' = 0 if school_year == 2011
 }
 ```
 
@@ -180,21 +181,21 @@ twoway (bar t_total school_year,
 	(scatter t_novice school_year, 
 		mcolor(none) mlabel(t_novice_label) mlabcolor(white) mlabpos(6)  
 		mlabsize(small)), 
-	title("Calculate the Share of Teachers Who Are New Hires", span) 
+	title("Share of Teachers Who Are New Hires", span) 
 	subtitle("by School Year", span) 
 	ytitle("Percent of Teachers") 
-	ylabel(0(10)60, nogrid labsize(medsmall)) 
+	ylabel(0(10)30, nogrid labsize(medsmall)) 
 	xtitle("") 
-	xlabel(2013 "2012-13" 2014 "2013-14" 2015 "2014-15", 
+	xlabel(2011 "2010-11" 2012 "2011-12" 2013 "2012-13" 2014 "2013-14" 2015 "2014-15", 
 		labsize(medsmall)) 
 	legend(order(1 "Experienced New Hires" 2 "Novice New Hires")
 		ring(0) position(11) symxsize(2) symysize(2) rows(2) size(medsmall) 
 		region(lstyle(none) lcolor(none) color(none))) 
 	graphregion(color(white) fcolor(white) lcolor(white)) 
 	plotregion(color(white) fcolor(white) lcolor(white) margin(2 0 2 0))
-	note(" " "*Significantly different from 2012-2013 value, at the 95 percent confidence level."
-    "Notes: Sample includes teachers in the 2012-13 through 2014-15 school years, with `teacher_years' teacher years and `unique_teachers' unique teachers." 
-    "Novices were in their first year of teaching.", size(vsmall) span);
+	note(" " "*Significantly different from 2010-2011 value, at the 95 percent confidence level."
+		"Notes: Sample includes teachers in the 2009-10 through 2014-15 school years, with `teacher_years' teacher years and `unique_teachers' unique teachers." 
+		"Novices were in their first year of teaching.", size(vsmall) span);
 #delimit cr
 ```
 

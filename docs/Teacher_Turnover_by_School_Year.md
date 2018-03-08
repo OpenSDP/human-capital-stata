@@ -73,7 +73,7 @@ Keep only teachers in years for which next-year retention status can be calculat
 
 
 ```stata
-keep if school_year >= 2012 & school_year <= 2014 
+keep if school_year >= 2010 & school_year <= 2014 
 assert !missing(t_stay, t_transfer, t_leave)
 ```
 
@@ -110,13 +110,13 @@ restore
 foreach var in t_leave t_transfer {
 	gen sig_`var' = .
 	xi: logit `var' i.school_year, robust
-	forval year = 2013/2014 {
+	forval year = 2011/2014 {
 		replace sig_`var' = abs(_b[_Ischool_ye_`year'] / _se[_Ischool_ye_`year']) ///
 			if school_year == `year'
 		replace sig_`var' = 0 if sig_`var' <= 1.96 & school_year == `year'
 		replace sig_`var' = 1 if sig_`var' > 1.96 & school_year == `year'
 	}
-	replace sig_`var' = 0 if school_year == 2012
+	replace sig_`var' = 0 if school_year == 2010
 }
 ```
 
@@ -183,7 +183,7 @@ twoway bar t_transfer count,
 	yscale(range(0(10)60)) 
 	ylabel(0(10)60, nogrid labsize(medsmall)) 
 	xtitle("")
-	xlabel(1 "2011-12" 2 "2012-13" 3 "2013-14", labsize(medsmall))
+	xlabel(1 "2009-10" 2 "2010-11" 3 "2011-12" 4 "2012-13" 5 "2013-14", labsize(medsmall))
 	legend(order(1 "Transfer Schools" 2 "Leave")
 		ring(0) position(11) symxsize(2) symysize(2) rows(2) size(medsmall) 
 		region(lstyle(none) lcolor(none) color(none))) 
@@ -191,7 +191,7 @@ twoway bar t_transfer count,
 	graphregion(color(white) fcolor(white) lcolor(white)) plotregion(color(white) 
 		fcolor(white) lcolor(white))
 	
-	note("*Significantly different from 2011-12 value, at the 95 percent confidence
+	note("*Significantly different from 2009-10 value, at the 95 percent confidence
 level." "Notes: Sample includes `teacher_years' teacher years and
 `unique_teachers' unique teachers. Retention analyses are based on one-year retention
 rates.", span size(vsmall)); 

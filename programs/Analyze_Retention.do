@@ -1,7 +1,7 @@
 /*****************************************************************************************
 * SDP Version 1.0
-* Last Updated: April 3, 2014
-* File name: Analyze_E_Retention.do
+* Last Updated: March 8, 2018
+* File name: Analyze_Retention.do
 * Author(s): Strategic Data Project
 *  
 * Description: This program produces analyses that show teacher retention patterns by:
@@ -29,7 +29,7 @@
 	// Edit the file path below to point to the directory with folders for data, logs,
 	// programs, and tables and figures. Change to that directory.
 	
-	cd "C:\working_files\human-capital-stata"
+	cd "C:\working_files"
 
 	// Define file locations.
 	
@@ -62,7 +62,7 @@ if $retention_pie == 1 {
 	// Step 2: Restrict sample. Keep only teachers in years for which next-year
 	// retention status can be calculated. 
 	
-	keep if school_year >= 2012 & school_year <= 2014 
+	keep if school_year >= 2010 & school_year <= 2014 
 	assert !missing(t_stay, t_transfer, t_leave)
 	
 	// Step 3: Review variables.
@@ -130,7 +130,7 @@ if $retention_pie == 1 {
 			fcolor(white) lcolor(white))
 			
 		note(" " "Notes: Sample includes `teacher_years' teacher years and
-`unique_teachers' unique teachers in the 2011-12 to 2013-14 school years. Retention
+`unique_teachers' unique teachers in the 2009-10 to 2013-14 school years. Retention
 analyses are based" "on one-year retention rates.", span size(vsmall)) ; 
 	#delimit cr
 	
@@ -138,7 +138,7 @@ analyses are based" "on one-year retention rates.", span size(vsmall)) ;
 	
 	graph save "$graphs\Average_Teacher_Retention.gph", replace
 	graph export "$graphs\Average_Teacher_Retention.emf", replace
-		
+	
 } 
 	
 /*** E2. Teacher Retention by School Year ***/ 
@@ -154,7 +154,7 @@ if $retention_year == 1 {
 	// retention status can be calculated. 
 	
 	//keep if t_is_teacher == 1
-	keep if school_year >= 2012 & school_year <= 2014 
+	keep if school_year >= 2010 & school_year <= 2014 
 	assert !missing(t_stay, t_transfer, t_leave)
 	
 	// Step 3: Review variables.
@@ -179,13 +179,13 @@ if $retention_year == 1 {
 	foreach var in t_leave t_transfer {
 		gen sig_`var' = .
 		xi: logit `var' i.school_year, robust
-		forval year = 2013/2014 {
+		forval year = 2011/2014 {
 			replace sig_`var' = abs(_b[_Ischool_ye_`year'] / _se[_Ischool_ye_`year']) ///
 				if school_year == `year'
 			replace sig_`var' = 0 if sig_`var' <= 1.96 & school_year == `year'
 			replace sig_`var' = 1 if sig_`var' > 1.96 & school_year == `year'
 		}
-		replace sig_`var' = 0 if school_year == 2012
+		replace sig_`var' = 0 if school_year == 2010
 	}		
 			
 	// Step 6: Collapse and calculate shares.
@@ -236,7 +236,7 @@ if $retention_year == 1 {
 		yscale(range(0(10)60)) 
 		ylabel(0(10)60, nogrid labsize(medsmall)) 
 		xtitle("")
-		xlabel(1 "2011-12" 2 "2012-13" 3 "2013-14", labsize(medsmall))
+		xlabel(1 "2009-10" 2 "2010-11" 3 "2011-12" 4 "2012-13" 5 "2013-14", labsize(medsmall))
 		legend(order(1 "Transfer Schools" 2 "Leave")
 			ring(0) position(11) symxsize(2) symysize(2) rows(2) size(medsmall) 
 			region(lstyle(none) lcolor(none) color(none))) 
@@ -244,7 +244,7 @@ if $retention_year == 1 {
 		graphregion(color(white) fcolor(white) lcolor(white)) plotregion(color(white) 
 			fcolor(white) lcolor(white))
 		
-		note("*Significantly different from 2011-12 value, at the 95 percent confidence
+		note("*Significantly different from 2009-10 value, at the 95 percent confidence
 level." "Notes: Sample includes `teacher_years' teacher years and
 `unique_teachers' unique teachers. Retention analyses are based on one-year retention
 rates.", span size(vsmall)); 
@@ -254,7 +254,7 @@ rates.", span size(vsmall));
 	// Step 10: Save chart.
 	
 	graph save "$graphs\Retention_by_School_Year.gph", replace 
-	graph export "$graphs\Retention_by_School_Year.emf", replace 
+	graph export "$graphs\Retention_by_School_Year.emf", replace
 					
 } 
 
@@ -277,7 +277,7 @@ if $retention_school_poverty == 1 {
 		collapse (mean) sch_frpl_pct, by(school_code school_year)
 		isid school_code school_year
 		gen school_poverty_quartile = .
-		forval year = 2012/2015 {
+		forval year = 2010/2015 {
 			xtile temp_poverty_quartile = sch_frpl_pct if school_year == `year', nq(4)
 			replace school_poverty_quartile = temp_poverty_quartile if school_year == `year'
 			drop temp_poverty_quartile
@@ -300,7 +300,7 @@ if $retention_school_poverty == 1 {
 	// retention status can be calculated. Keep records with non-missing values
 	// for school poverty quartile.
 	
-	keep if school_year >= 2012 & school_year <= 2014 
+	keep if school_year >= 2010 & school_year <= 2014 
 	keep if !missing(school_poverty_quartile)
 	assert !missing(t_stay, t_transfer, t_leave)
 	
@@ -395,7 +395,7 @@ if $retention_school_poverty == 1 {
 		
 		note("*Significantly different from schools in the lowest free and reduced 
 price lunch quartile, at the 95 percent confidence level." "Notes: Sample includes
-`teacher_years' teacher years and `unique_teachers' unique teachers in the 2011-12
+`teacher_years' teacher years and `unique_teachers' unique teachers in the 2009-10
 to 2013-14 school years. Retention analyses are based" "on one-year retention rates.",
 span size(vsmall));
 
@@ -432,7 +432,7 @@ if $retention_teacher_effectiveness == 1 {
 	// Keep employees who are teachers. If school level restriction is chosen, 
 	// keep only records from either elementary or middle schools.
 	
-	keep if school_year >= 2012 & school_year <= 2013
+	keep if school_year >= 2010 & school_year <= 2014
 	keep if !missing(current_tre_`subject')
 	if "`level'" == "elem" {	
 		keep if school_lvl == "Elem"
@@ -562,7 +562,7 @@ if $retention_teacher_effectiveness == 1 {
 			fcolor(white) lcolor(white))
 		
 		note(" " "*Significantly different from bottom tercile value, at the 95 percent 
-confidence level." "Notes: Sample includes 2011-12 through 2012-13 `gradespan' grade
+confidence level." "Notes: Sample includes 2009-10 through 2013-14 `gradespan' grade
 `subj_foot' teachers, with `teacher_years' teacher years and `unique_teachers' unique"
 "teachers. Teacher effects are measured in test score standard deviations, with
 teacher-specific shrinkage factors applied to adjust" "for differences in sample
@@ -589,7 +589,7 @@ if $retention_trajectory_novices == 1 {
 	
 	// Restrict sample to years for which next-year retention status can be observed
 	// and to teacher records with non-missing novice indicators.
-	keep if school_year >= 2012 & school_year <= 2015
+	keep if school_year >= 2011 & school_year <= 2015
 	keep if !missing(t_novice)
 	
 	// Review variables.
@@ -597,34 +597,34 @@ if $retention_trajectory_novices == 1 {
 	
 	// Make indicator for membership in novice cohort.
 	
-	gen t_novice_2012 = school_year == 2012 & t_novice == 1
-	bysort tid: egen max_t_novice_2012 = max(t_novice_2012)
-	drop t_novice_2012
-	rename max_t_novice_2012 t_novice_2012
+	gen t_novice_2011 = school_year == 2011 & t_novice == 1
+	bysort tid: egen max_t_novice_2011 = max(t_novice_2011)
+	drop t_novice_2011
+	rename max_t_novice_2011 t_novice_2011
 	
 	// Restrict sample to novice cohort, dropping observations of teachers
 	// who reappear after leaving for one or more school years.
 	
-	keep if t_novice_2012 == 1
+	keep if t_novice_2011 == 1
 	gen t_leave_year = school_year if t_leave == 1 
 	bysort tid: egen min_t_leave_year = min(t_leave_year)
 	drop if school_year > min_t_leave_year 
 	
 	// Get sample size.
 	
-	sum tid if school_year == 2012 
+	sum tid if school_year == 2011 
 	local unique_teachers = string(r(N), "%9.0fc")
 
 	// Get initial school.
 		
-	gen school_code_2012 = school_code if school_year == 2012
-	egen max_school_code_2012 = max(school_code_2012), by(tid)
-	replace school_code_2012 = max_school_code_2012
-	drop max_school_code_2012
+	gen school_code_2011 = school_code if school_year == 2011
+	egen max_school_code_2011 = max(school_code_2011), by(tid)
+	replace school_code_2011 = max_school_code_2011
+	drop max_school_code_2011
 	
 	// Define outcome variables.
 	
-	gen still_same_school = school_code == school_code_2012 
+	gen still_same_school = school_code == school_code_2011 
 	gen still_teach = 1
 	tab school_year still_same_school, mi
 	tab school_year still_teach, mi
@@ -632,15 +632,15 @@ if $retention_trajectory_novices == 1 {
 	// Collapse to sum variables of interest.
 	
 	collapse (sum) still_same_school still_teach (count) tid, by(school_year)
-	gen cohort_count_2012 = tid if school_year == 2012
-	egen max_cohort_count_2012 = max(cohort_count_2012)
-	replace cohort_count_2012 = max_cohort_count_2012
-	drop max_cohort_count_2012
+	gen cohort_count_2011 = tid if school_year == 2011
+	egen max_cohort_count_2011 = max(cohort_count_2011)
+	replace cohort_count_2011 = max_cohort_count_2011
+	drop max_cohort_count_2011
 	
 	// Calculate outcome percentages by year.
 	
 	foreach var in still_same_school still_teach {
-		replace `var' = 100 * `var' / cohort_count_2012
+		replace `var' = 100 * `var' / cohort_count_2011
 		format `var' %9.0fc
 	}
 	
@@ -678,8 +678,8 @@ if $retention_trajectory_novices == 1 {
 		xtitle("") 
 		yscale(range(0(20)100)) 
 		ylabel(0(20)100, nogrid format(%9.0f) labsize(medsmall)) 
-		xscale(range(2012(.1)2015.1)) 
-		xlabel(2012 "2011-12" 2013 "2012-13" 2014 "2013-14" 2015 "2014-15", 
+		xscale(range(2011(.1)2015.1)) 
+		xlabel(2011 "2011-12" 2012 "2011-12" 2013 "2012-13" 2014 "2013-14" 2015 "2014-15", 
 			labsize(medsmall)) 
 		legend(position(8) order(2 1) cols(1) symxsize(3) ring(0) size(medsmall) 
 			region(lstyle(none) lcolor(none) color(none))
@@ -690,7 +690,7 @@ if $retention_trajectory_novices == 1 {
 			fcolor(white) lcolor(white))
 			
 		note(" " "Notes: Sample includes `unique_teachers' teachers who were in their
-first year of teaching in the 2011-12 school year.", span size(vsmall));
+first year of teaching in the 2010-11 school year.", span size(vsmall));
 
 	#delimit cr
 	

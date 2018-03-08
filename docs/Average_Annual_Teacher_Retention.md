@@ -73,7 +73,7 @@ Keep only teachers in years for which next-year retention status can be calculat
 
 
 ```stata
-keep if school_year >= 2012 & school_year <= 2014 
+keep if school_year >= 2010 & school_year <= 2014 
 assert !missing(t_stay, t_transfer, t_leave)
 ```
 
@@ -157,7 +157,7 @@ graph pie t_stay t_transfer t_leave,
 		fcolor(white) lcolor(white))
 		
 	note(" " "Notes: Sample includes `teacher_years' teacher years and
-`unique_teachers' unique teachers in the 2011-12 to 2013-14 school years. Retention
+`unique_teachers' unique teachers in the 2009-10 to 2013-14 school years. Retention
 analyses are based" "on one-year retention rates.", span size(vsmall)) ; 
 #delimit cr
 ```

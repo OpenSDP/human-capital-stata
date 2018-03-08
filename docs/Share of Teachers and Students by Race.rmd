@@ -40,7 +40,7 @@ global log 		".\logs"
 
 // Open log file
 
-log using "${log}\Analyze_Retention.txt", text replace
+log using "${log}\Analyze_Recruitment.txt", text replace
 
 ```
 

@@ -74,7 +74,7 @@ Drop the first year of data, since new hires are not defined for that year. Drop
 
 
 ```stata
-keep if school_year > 2012
+keep if school_year > 2010
 keep if !missing(t_new_hire)
 keep if !missing(t_novice)
 assert !missing(t_experience)
@@ -136,7 +136,7 @@ graph pie, over (pie_hire) angle(-50)
 	graphregion(color(white) fcolor(white) lcolor(white))
 	plotregion(color(white) fcolor(white) lcolor(white) margin(1 1 3 3))
 	title("Calculate the Share of Teachers Who Are New Hires", span)
-	note(" " "Notes: Sample includes teachers in the 2012-13 through 2014-15 
+	note(" " "Notes: Sample includes teachers in the 2010-11 through 2014-15 
 school years, with `teacher_years' teacher years and `unique_teachers' unique 
 teachers." "Novices were in their first year of teaching.", size(vsmall) span);
 #delimit cr

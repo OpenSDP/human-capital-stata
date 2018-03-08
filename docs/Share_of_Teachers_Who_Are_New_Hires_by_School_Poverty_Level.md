@@ -71,21 +71,14 @@ isid tid school_year
 
 ####Step 2: Restrict the analysis sample.
 
-Also generate veteran new hire indicator.
-
 
 ```stata
-keep if school_year > 2012
+keep if school_year > 2010
 keep if !missing(t_new_hire)
 keep if !missing(t_novice)
-
 keep if !missing(school_poverty_quartile)
-	
-// Generate missing t_veteran_new_hire variable
-gen t_veteran_new_hire = 0 if !missing(t_experience)
-replace t_veteran_new_hire = 1 if t_new_hire == 1 & t_novice == 0 & !missing(t_experience)
+keep if !missing(t_experience, t_veteran_new_hire)	
 
-assert !missing(t_experience, t_veteran_new_hire)
 ```
 
 
@@ -184,7 +177,7 @@ twoway (bar t_total school_poverty_quartile,
 	title("Calculate the Share of Teachers Who Are New Hires", span) 
 	subtitle("by School FRPL Quartile", span) 
 	ytitle("Percent of Teachers") 
-	ylabel(0(10)60, nogrid labsize(medsmall)) 
+	ylabel(0(10)30, nogrid labsize(medsmall)) 
 	xtitle("") 
 	xlabel(1 "Lowest Poverty" 2 "2nd Quartile" 3 "3rd Quartile" 4 "Highest Poverty", 
 		labsize(medsmall)) 
@@ -195,7 +188,7 @@ twoway (bar t_total school_poverty_quartile,
 	plotregion(color(white) fcolor(white) lcolor(white) margin(2 0 2 0))
 	note(" " "*Significantly different from schools in the lowest free and reduced 
 price lunch quartile, at the 95 percent confidence level." "Notes: Sample includes 
-teachers in the 2012-13 through 2014-15 school years, with `teacher_years' teacher years 
+teachers in the 2010-11 through 2014-15 school years, with `teacher_years' teacher years 
 and `unique_teachers' unique teachers."
 "Novices were in their first year of teaching.", size(vsmall) span);
 #delimit cr

@@ -84,7 +84,7 @@ Keep years for which both teacher effects value added estimates and nextyear ret
 
 
 ```stata
-keep if school_year >= 2012 & school_year <= 2013
+keep if school_year >= 2010 & school_year <= 2014
 keep if !missing(current_tre_`subject')
 ```
 
@@ -233,7 +233,7 @@ twoway bar t_transfer count,
 		fcolor(white) lcolor(white))
 	
 	note(" " "*Significantly different from bottom tercile value, at the 95 percent 
-confidence level." "Notes: Sample includes 2011-12 through 2012-13 `gradespan' grade
+confidence level." "Notes: Sample includes 2009-10 through 2013-14 `gradespan' grade
 `subj_foot' teachers, with `teacher_years' teacher years and `unique_teachers' unique"
 "teachers. Teacher effects are measured in test score standard deviations, with
 teacher-specific shrinkage factors applied to adjust" "for differences in sample

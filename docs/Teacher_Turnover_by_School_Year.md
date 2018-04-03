@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Examine Teacher Turnover Across School Years
+[OpenSDP Analysis](http://opensdp.github.io/analysis) / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Examine Teacher Turnover Across School Years
 
 ![](Teacher_Turnover_by_School_Year.png)
 

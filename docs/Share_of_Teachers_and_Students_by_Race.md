@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Examine the Distribution of Teachers and Students by Race
+[OpenSDP Analysis](http://opensdp.github.io/analysis) / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Examine the Distribution of Teachers and Students by Race
 
 ![](Share_of_Teachers_and_Students_by_Race.png)
 

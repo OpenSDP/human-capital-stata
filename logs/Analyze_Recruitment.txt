@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  C:\Users\ems541\Documents\human-capital-stata\logs\Analyze_Recruitment.txt
+       log:  C:\Users\ems541\Documents\OpenSDPems\human-capital-stata\logs\Analyze_Recruitment.txt
   log type:  text
- opened on:   8 Mar 2018, 15:23:09
+ opened on:  29 Mar 2018, 09:15:54
 
 . 
 .         // Set program switches for recruitment analyses. Set switch to 0 to skip the 
@@ -25,1050 +25,200 @@
 .         
 .         use "${analysis}\Teacher_Year_Analysis", clear
 .         isid tid school_year
-.         
-.         // Step 2: Restrict the analysis sample. Keep only employees who are teachers. Drop
-.         // the first year of data, since new hires are not defined for that year. Drop 
-.         // records with missing values for variables important to the analysis.
-.         
-.         keep if (school_year > 2010)
-(9,612 observations deleted)
-.         keep if !missing(t_new_hire)
-(0 observations deleted)
-.         keep if !missing(t_novice)
-(0 observations deleted)
-.         keep if !missing(t_experience)
-(319 observations deleted)
-.         
-.         // Step 3: Review the values of variables to be used in the analysis.
-.         
-.         tab t_new_hire, mi
+. program error:  matching close brace not found
+r(198);
 
- Teacher Is |
-   New Hire |      Freq.     Percent        Cum.
+end of do-file
+
+r(198);
+. tab sch_high
+
+  School Is |
+High School |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     41,614       88.90       88.90
-          1 |      5,196       11.10      100.00
+          0 |     42,122       74.24       74.24
+          1 |     14,619       25.76      100.00
 ------------+-----------------------------------
-      Total |     46,810      100.00
-.         tab t_novice, mi
+      Total |     56,741      100.00
 
- Teacher Is |
-     Novice |
- First-Year |
-    Teacher |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          0 |     45,144       96.44       96.44
-          1 |      1,666        3.56      100.00
-------------+-----------------------------------
-      Total |     46,810      100.00
-.         tab t_novice t_new_hire, mi col
+. do "C:\Users\ems541\AppData\Local\Temp\STD00000000.tmp"
 
-+-------------------+
-| Key               |
-|-------------------|
-|     frequency     |
-| column percentage |
-+-------------------+
+.         // put loops for subject and level around the analysis and graphing code.
+.         // To include all grade levels in the analysis, comment out the local level 
+.         // command below.
+.         
+.         local subject m
 
-Teacher Is |
-    Novice |
-First-Year |  Teacher Is New Hire
-   Teacher |         0          1 |     Total
------------+----------------------+----------
-         0 |    41,614      3,530 |    45,144 
-           |    100.00      67.94 |     96.44 
------------+----------------------+----------
-         1 |         0      1,666 |     1,666 
-           |      0.00      32.06 |      3.56 
------------+----------------------+----------
-     Total |    41,614      5,196 |    46,810 
-           |    100.00     100.00 |    100.00 
+.         *local level middle
+.         
+.         // Step 2: Load the Teacher_Year_Analysis file.
+.         
+.         use "${analysis}/Teacher_Year_Analysis.dta", clear
 
-.         
-.         // Step 4: Define a new variable which includes both novice and experienced 
-.         // new hires.
-.         
-.         gen pie_hire = .
-(46,810 missing values generated)
-.         replace pie_hire = 1 if t_new_hire == 0
-(41,614 real changes made)
-.         replace pie_hire = 2 if t_new_hire == 1 & t_novice == 1
-(1,666 real changes made)
-.         replace pie_hire = 3 if t_new_hire == 1 & t_novice == 0
-(3,530 real changes made)
-.         tab pie_hire, mi
-
-   pie_hire |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          1 |     41,614       88.90       88.90
-          2 |      1,666        3.56       92.46
-          3 |      3,530        7.54      100.00
-------------+-----------------------------------
-      Total |     46,810      100.00
-.         
-.         // Step 5: Calculate and store sample sizes for the chart footnote.
-.         
-.         summ tid
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-         tid |     46,810     1007372    4272.455    1000001    1014808
-.         local teacher_years = string(r(N), "%9.0fc")
-.         preserve 
-.                 bys tid: keep if _n == 1
-(33,162 observations deleted)
-.                 summ tid
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-         tid |     13,648     1007414     4283.05    1000001    1014808
-.                 local unique_teachers = string(r(N), "%9.0fc")
-.         restore
-.         
-.         // Step 6: Create a pie chart. Footnote text is flush left to allow 
-.         // wrapping lines without inserting tabs in footnote.
-.         
-.         #delimit ;
-delimiter now ;
-.         graph pie, over (pie_hire) angle(-50)   
->                 pie(1, color(dknavy))
->                 pie(2, color(maroon))
->                 pie(3, color(forest_green))
->                 plabel(_all percent, format(%3.0f) color(white) size(*1.2))
->                 plabel(1 "Experienced" "Teachers", gap(30) color(black) size(medsmall))
->                 plabel(2 "Novice" "New Hires", gap(30) color(black) size(medsmall))
->                 plabel(3 "Experienced" "New Hires", gap(30) color(black) size(medsmall))
->                 legend(off)
->                 graphregion(color(white) fcolor(white) lcolor(white))
->                 plotregion(color(white) fcolor(white) lcolor(white) margin(1 1 3 3))
->                 title("Share of Teachers Who Are New Hires", span)
->                 note(" " "Notes: Sample includes teachers in the 2010-11 through 2014-15 
-> school years, with `teacher_years' teacher years and `unique_teachers' unique 
-> teachers." "Novices were in their first year of teaching.", size(vsmall) span);
-.         #delimit cr
-delimiter now cr
-.         
-.         // Step 7: Save the chart in Stata Graph and EMF formats.
-.         
-.         graph export "${graphs}/Share_of_Teachers_New_Hires.emf", replace 
-(file C:\Users\ems541\Documents\human-capital-stata\tables_figures/Share_of_Teachers_New_Hires.emf written in
->  Enhanced Metafile format)
-.         graph save "${graphs}/Share_of_Teachers_New_Hires.gph", replace 
-(file .\tables_figures/Share_of_Teachers_New_Hires.gph saved)
-.         graph export "$docs\Share_of_Teachers_Who_Are_New_Hires.png", replace
-(file .\docs\Share_of_Teachers_Who_Are_New_Hires.png written in PNG format)
-. 
-. }
-
-. 
-. /*** A2. Share of Teachers Who Are New Hires by School Year ***/ 
-. 
-. if ${new_hires_year}==1 { 
-.         
-.         // Step 1: Load the Teacher_Year_Analysis data file.
-.         
-.         use "${analysis}\Teacher_Year_Analysis.dta", clear
 .         isid tid school_year
-.                 
-.         // Step 2: Restrict the analysis sample.
-.         
-.         keep if school_year > 2010
-(9,612 observations deleted)
-.         keep if !missing(t_new_hire)
-(0 observations deleted)
-.         keep if !missing(t_novice)
-(0 observations deleted)
-.         keep if !missing(t_experience)
-(319 observations deleted)
-.         
-.         // Generate missing t_veteran_new_hire variable
-.         gen t_veteran_new_hire = 0 if !missing(t_experience)
-.         replace t_veteran_new_hire = 1 if t_new_hire == 1 & t_novice == 0 & !missing(t_experience)
-(3,530 real changes made)
-.         
-.         assert !missing(t_experience, t_veteran_new_hire)
-.         
-.         // Step 3: Review variables to be used in the analysis.
-.         
-.         tab school_year t_novice, mi row
 
-+----------------+
-| Key            |
-|----------------|
-|   frequency    |
-| row percentage |
-+----------------+
-
-           |   Teacher Is Novice
-    School |  First-Year Teacher
-      Year |         0          1 |     Total
------------+----------------------+----------
-      2011 |     8,951        391 |     9,342 
-           |     95.81       4.19 |    100.00 
------------+----------------------+----------
-      2012 |     8,903        269 |     9,172 
-           |     97.07       2.93 |    100.00 
------------+----------------------+----------
-      2013 |     8,917        327 |     9,244 
-           |     96.46       3.54 |    100.00 
------------+----------------------+----------
-      2014 |     9,063        395 |     9,458 
-           |     95.82       4.18 |    100.00 
------------+----------------------+----------
-      2015 |     9,310        284 |     9,594 
-           |     97.04       2.96 |    100.00 
------------+----------------------+----------
-     Total |    45,144      1,666 |    46,810 
-           |     96.44       3.56 |    100.00 
-
-.         tab school_year t_veteran_new_hire, mi row
-
-+----------------+
-| Key            |
-|----------------|
-|   frequency    |
-| row percentage |
-+----------------+
-
-    School |  t_veteran_new_hire
-      Year |         0          1 |     Total
------------+----------------------+----------
-      2011 |     8,572        770 |     9,342 
-           |     91.76       8.24 |    100.00 
------------+----------------------+----------
-      2012 |     8,664        508 |     9,172 
-           |     94.46       5.54 |    100.00 
------------+----------------------+----------
-      2013 |     8,562        682 |     9,244 
-           |     92.62       7.38 |    100.00 
------------+----------------------+----------
-      2014 |     8,767        691 |     9,458 
-           |     92.69       7.31 |    100.00 
------------+----------------------+----------
-      2015 |     8,715        879 |     9,594 
-           |     90.84       9.16 |    100.00 
------------+----------------------+----------
-     Total |    43,280      3,530 |    46,810 
-           |     92.46       7.54 |    100.00 
-
-.         tab t_novice t_veteran_new_hire
-
-Teacher Is |
-    Novice |
-First-Year |  t_veteran_new_hire
-   Teacher |         0          1 |     Total
------------+----------------------+----------
-         0 |    41,614      3,530 |    45,144 
-         1 |     1,666          0 |     1,666 
------------+----------------------+----------
-     Total |    43,280      3,530 |    46,810 
-
-.         
-.         // Step 4: Calculate sample size. 
-.         
-.         summ tid
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-         tid |     46,810     1007372    4272.455    1000001    1014808
-.         local teacher_years = string(r(N), "%9.0fc")
-.         preserve 
-.                 bys tid: keep if _n == 1
-(33,162 observations deleted)
-.                 summ tid
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-         tid |     13,648     1007414     4283.05    1000001    1014808
-.                 local unique_teachers = string(r(N), "%9.0fc")
-.         restore
-.         
-.         // Step 5: Calculate significance indicator variables by year.
-.         
-.         foreach var in t_novice t_veteran_new_hire {
-  2.                 gen sig_`var' = .
-  3.                 xi: reg `var' i.school_year, robust
-  4.         
-.                 forvalues year = 2012/2015 {
-  5.                         replace sig_`var' = abs(_b[_Ischool_ye_`year'] / _se[_Ischool_ye_`year']) ///
->                                 if school_year == `year'
-  6.                         replace sig_`var' = 0 if sig_`var' <= 1.96 & school_year == `year'
-  7.                         replace sig_`var' = 1 if sig_`var' > 1.96 & school_year == `year'
-  8.                 }
-  9.                 replace sig_`var' = 0 if school_year == 2011
- 10.         }
-(46,810 missing values generated)
-i.school_year     _Ischool_ye_2011-2015(naturally coded; _Ischool_ye_2011 omitted)
-
-Linear regression                               Number of obs     =     46,810
-                                                F(4, 46805)       =      10.45
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.0009
-                                                Root MSE          =     .18519
-
-----------------------------------------------------------------------------------
-                 |               Robust
-        t_novice |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
------------------+----------------------------------------------------------------
-_Ischool_ye_2012 |  -.0125256   .0027198    -4.61   0.000    -.0178564   -.0071948
-_Ischool_ye_2013 |  -.0064797   .0028258    -2.29   0.022    -.0120182   -.0009412
-_Ischool_ye_2014 |  -.0000904   .0029197    -0.03   0.975    -.0058131    .0056323
-_Ischool_ye_2015 |  -.0122522   .0026996    -4.54   0.000    -.0175433    -.006961
-           _cons |    .041854    .002072    20.20   0.000     .0377929    .0459151
-----------------------------------------------------------------------------------
-(9,172 real changes made)
-(0 real changes made)
-(9,172 real changes made)
-(9,244 real changes made)
-(0 real changes made)
-(9,244 real changes made)
-(9,458 real changes made)
-(9,458 real changes made)
-(0 real changes made)
-(9,594 real changes made)
-(0 real changes made)
-(9,594 real changes made)
-(9,342 real changes made)
-(46,810 missing values generated)
-i.school_year     _Ischool_ye_2011-2015(naturally coded; _Ischool_ye_2011 omitted)
-
-Linear regression                               Number of obs     =     46,810
-                                                F(4, 46805)       =      26.31
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.0021
-                                                Root MSE          =      .2638
-
-----------------------------------------------------------------------------------
-                 |               Robust
-t_veteran_new_~e |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
------------------+----------------------------------------------------------------
-_Ischool_ye_2012 |  -.0270375    .003715    -7.28   0.000     -.034319    -.019756
-_Ischool_ye_2013 |  -.0086459   .0039357    -2.20   0.028    -.0163599   -.0009319
-_Ischool_ye_2014 |  -.0093636   .0039061    -2.40   0.017    -.0170196   -.0017076
-_Ischool_ye_2015 |   .0091963   .0040954     2.25   0.025     .0011693    .0172233
-           _cons |   .0824235   .0028454    28.97   0.000     .0768464    .0880006
-----------------------------------------------------------------------------------
-(9,172 real changes made)
-(0 real changes made)
-(9,172 real changes made)
-(9,244 real changes made)
-(0 real changes made)
-(9,244 real changes made)
-(9,458 real changes made)
-(0 real changes made)
-(9,458 real changes made)
-(9,594 real changes made)
-(0 real changes made)
-(9,594 real changes made)
-(9,342 real changes made)
-.                 
-.         // Step 6: Collapse the teacher-level data file to calculate percent of new hires
-.         // by year.
-.         
-.         collapse (mean) t_novice t_veteran_new_hire sig_*, by(school_year)
-.         foreach var in t_novice t_veteran_new_hire {
-  2.                 replace `var' = 100 * `var'
-  3.         }
-(5 real changes made)
-(5 real changes made)
-.         
-.         // Step 7: Concatenate values and significance asterisks to make value labels.
-.         
-.         foreach var of varlist t_novice t_veteran_new_hire {
-  2.                 tostring(sig_`var'), replace
-  3.                 replace sig_`var' = "*" if sig_`var' == "1"
-  4.                 replace sig_`var' = "" if sig_`var' == "0"
-  5.                 gen `var'_str = string(`var', "%9.0f")
-  6.                 egen `var'_label = concat(`var'_str sig_`var')
-  7.         }
-sig_t_novice was float now str1
-(3 real changes made)
-(2 real changes made)
-sig_t_veteran_new_hire was float now str1
-(4 real changes made)
-(1 real change made)
-.         
-.         // Step 8: Get the total new hire percent for each year for graphing.
-.         
-.         gen t_total = t_novice + t_veteran_new_hire
-.                 
-.         // Step 9: Create a stacked bar graph using overlaid bars. Use scatter plots with
-.         // invisible symbols for the value labels. 
-.         
-.         #delimit ;
-delimiter now ;
-.         twoway (bar t_total school_year, 
->                         fcolor(forest_green) lcolor(forest_green) lwidth(0) barwidth(0.75))
->                 (bar t_novice school_year, 
->                         fcolor(maroon) lcolor(maroon) lwidth(0) barwidth(0.75)) 
->                 (scatter t_total school_year, 
->                         mcolor(none) mlabel(t_veteran_new_hire_label) mlabcolor(white) mlabpos(6)  
->                         mlabsize(small)) 
->                 (scatter t_novice school_year, 
->                         mcolor(none) mlabel(t_novice_label) mlabcolor(white) mlabpos(6)  
->                         mlabsize(small)), 
->                 title("Share of Teachers Who Are New Hires", span) 
->                 subtitle("by School Year", span) 
->                 ytitle("Percent of Teachers") 
->                 ylabel(0(10)30, nogrid labsize(medsmall)) 
->                 xtitle("") 
->                 xlabel(2011 "2010-11" 2012 "2011-12" 2013 "2012-13" 2014 "2013-14" 2015 "2014-15", 
->                         labsize(medsmall)) 
->                 legend(order(1 "Experienced New Hires" 2 "Novice New Hires")
->                         ring(0) position(11) symxsize(2) symysize(2) rows(2) size(medsmall) 
->                         region(lstyle(none) lcolor(none) color(none))) 
->                 graphregion(color(white) fcolor(white) lcolor(white)) 
->                 plotregion(color(white) fcolor(white) lcolor(white) margin(2 0 2 0))
->                 note(" " "*Significantly different from 2010-2011 value, at the 95 percent confidence level
-> ."
->                         "Notes: Sample includes teachers in the 2009-10 through 2014-15 school years, with 
-> `teacher_years' teacher years and `unique_teachers' unique teachers." 
->                         "Novices were in their first year of teaching.", size(vsmall) span);
-.         #delimit cr
-delimiter now cr
-.         
-.         // Step 10: Save the chart in Stata Graph and EMF formats.
-.         
-.         graph export "${graphs}/New Hires_by_School_Year.emf", replace 
-(file C:\Users\ems541\Documents\human-capital-stata\tables_figures/New Hires_by_School_Year.emf written in En
-> hanced Metafile format)
-.         graph save "${graphs}/New Hires_by_School_Year.gph", replace 
-(file .\tables_figures/New Hires_by_School_Year.gph saved)
-.         graph export "$docs\Share_of_Teachers_Who_Are_New_Hires_by_School_Year.png", replace
-(file .\docs\Share_of_Teachers_Who_Are_New_Hires_by_School_Year.png written in PNG format)
 . 
-. }
+end of do-file
+
+. tab sch_high
+
+  School Is |
+High School |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |     42,122       74.24       74.24
+          1 |     14,619       25.76      100.00
+------------+-----------------------------------
+      Total |     56,741      100.00
+
+. tab sch_high current_tre_m
+too many values
+r(134);
+
+. codebook sch_high current_tre_m
+
+---------------------------------------------------------------------------------------------------
+sch_high                                                                      School Is High School
+---------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/56,741
+
+            tabulation:  Freq.  Value
+                        42,122  0
+                        14,619  1
+
+---------------------------------------------------------------------------------------------------
+current_tre_m                                Math Single-Year Teacher Effects for Given School Year
+---------------------------------------------------------------------------------------------------
+
+                  type:  numeric (double)
+
+                 range:  [-.31580487,.37480176]       units:  1.000e-21
+         unique values:  3,843                    missing .:  50,651/56,741
+
+                  mean:  -.002382
+              std. dev:   .093456
+
+           percentiles:        10%       25%       50%       75%       90%
+                          -.120726  -.065579   -.00778   .059268   .118832
+
+. do "C:\Users\ems541\AppData\Local\Temp\STD00000000.tmp"
+
+.         keep if school_year >= 2010 & school_year <= 2014
+(9,642 observations deleted)
+
+.         keep if !missing(current_tre_`subject')
+current_tre_ ambiguous abbreviation
+r(111);
+
+end of do-file
+
+r(111);
+
+. keep if !missing(current_tre_m)
+(42,101 observations deleted)
+
+. tab sch_high
+
+  School Is |
+High School |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,924       98.52       98.52
+          1 |         74        1.48      100.00
+------------+-----------------------------------
+      Total |      4,998      100.00
+
+. tab sch_middle
+
+  School Is |
+     Middle |
+     School |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,711       74.25       74.25
+          1 |      1,287       25.75      100.00
+------------+-----------------------------------
+      Total |      4,998      100.00
+
+. tab sch_elem
+
+  School Is |
+ Elementary |
+     School |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,361       27.23       27.23
+          1 |      3,637       72.77      100.00
+------------+-----------------------------------
+      Total |      4,998      100.00
+
+. do "C:\Users\ems541\AppData\Local\Temp\STD00000000.tmp"
 
 .         
-. /*** A3. Share of Teachers Who Are New Hires by School Poverty Level ***/
-.  
-. if ${new_hires_school_poverty}==1 { 
-.         
-.         // Step 1: Load the Teacher_Year_Analysis data file. 
-.         
-.         use "${analysis}\Teacher_Year_Analysis.dta", clear 
+.         use "${analysis}/Teacher_Year_Analysis.dta", clear
+
 .         isid tid school_year
-.         
-.         // Generate missing t_veteran_new_hire, school_poverty_quartile
-.         gen t_veteran_new_hire = 0 if !missing(t_experience)
-(404 missing values generated)
-.         replace t_veteran_new_hire = 1 if t_new_hire == 1 & t_novice == 0 & !missing(t_experience)
-(3,530 real changes made)
-.         
-.         preserve
-.         
-.                 keep school_code school_year sch_frpl_pct
-.                 drop if mi(school_code) | mi(school_year) | mi(sch_frpl_pct)
-(0 observations deleted)
-.                 collapse (mean) sch_frpl_pct, by(school_code school_year)
-.                 isid school_code school_year
-.                 gen school_poverty_quartile = .
-(947 missing values generated)
-.                 forval year = 2010/2015 {
-  2.                         xtile temp_poverty_quartile = sch_frpl_pct if school_year == `year', nq(4)
-  3.                         replace school_poverty_quartile = temp_poverty_quartile if school_year == `year'
-  4.                         drop temp_poverty_quartile
-  5.                 }
-(150 real changes made)
-(153 real changes made)
-(157 real changes made)
-(160 real changes made)
-(162 real changes made)
-(165 real changes made)
-.                 assert !missing(school_poverty_quartile)
-.                 label define pvt 1 "Lowest percentage of FRPL-eligible students"
-.                 label define pvt 2 "Second-lowest percentage of FRPL-eligible students" , add
-.                 label define pvt 3 "Second-highest percentage of FRPL-eligible students" , add
-.                 label define pvt 4 "Highest percentage of FRPL-eligible students", add
-.                 label values school_poverty_quartile pvt
-.                 drop sch_frpl_pct
-. 
-.                 tempfile school_poverty_qrt
-.                 save `school_poverty_qrt'
-file C:\Users\ems541\AppData\Local\Temp\ST_00000004.tmp saved
-.         
-.         restore
-.         merge m:1 school_code school_year using `school_poverty_qrt', keep(1 2 3) nogen 
-
-    Result                           # of obs.
-    -----------------------------------------
-    not matched                             0
-    matched                            56,741  
-    -----------------------------------------
-.         
-.         // Step 2: Restrict the analysis sample.
-.         
-.         keep if school_year > 2010
-(9,612 observations deleted)
-.         keep if !missing(t_new_hire)
-(0 observations deleted)
-.         keep if !missing(t_novice)
-(0 observations deleted)
-. 
-.         keep if !missing(school_poverty_quartile)
-(0 observations deleted)
-.         keep if !missing(t_experience, t_veteran_new_hire)
-(319 observations deleted)
-.         
-.         // Step 3: Review variables used in the analysis.
-.         
-.         tab school_poverty_quartile, mi
-
-                school_poverty_quartile |      Freq.     Percent        Cum.
-----------------------------------------+-----------------------------------
-Lowest percentage of FRPL-eligible stud |     12,682       27.09       27.09
-Second-lowest percentage of FRPL-eligib |     13,129       28.05       55.14
-Second-highest percentage of FRPL-eligi |     11,351       24.25       79.39
-Highest percentage of FRPL-eligible stu |      9,648       20.61      100.00
-----------------------------------------+-----------------------------------
-                                  Total |     46,810      100.00
-.         tab school_poverty_quartile t_novice, mi row
-
-+----------------+
-| Key            |
-|----------------|
-|   frequency    |
-| row percentage |
-+----------------+
-
-                      |   Teacher Is Novice
-school_poverty_quarti |  First-Year Teacher
-                   le |         0          1 |     Total
-----------------------+----------------------+----------
-Lowest percentage of  |    12,260        422 |    12,682 
-                      |     96.67       3.33 |    100.00 
-----------------------+----------------------+----------
-Second-lowest percent |    12,713        416 |    13,129 
-                      |     96.83       3.17 |    100.00 
-----------------------+----------------------+----------
-Second-highest percen |    10,951        400 |    11,351 
-                      |     96.48       3.52 |    100.00 
-----------------------+----------------------+----------
-Highest percentage of |     9,220        428 |     9,648 
-                      |     95.56       4.44 |    100.00 
-----------------------+----------------------+----------
-                Total |    45,144      1,666 |    46,810 
-                      |     96.44       3.56 |    100.00 
-
-.         tab school_poverty_quartile t_veteran_new_hire, mi row
-
-+----------------+
-| Key            |
-|----------------|
-|   frequency    |
-| row percentage |
-+----------------+
-
-school_poverty_quarti |  t_veteran_new_hire
-                   le |         0          1 |     Total
-----------------------+----------------------+----------
-Lowest percentage of  |    11,881        801 |    12,682 
-                      |     93.68       6.32 |    100.00 
-----------------------+----------------------+----------
-Second-lowest percent |    12,212        917 |    13,129 
-                      |     93.02       6.98 |    100.00 
-----------------------+----------------------+----------
-Second-highest percen |    10,450        901 |    11,351 
-                      |     92.06       7.94 |    100.00 
-----------------------+----------------------+----------
-Highest percentage of |     8,737        911 |     9,648 
-                      |     90.56       9.44 |    100.00 
-----------------------+----------------------+----------
-                Total |    43,280      3,530 |    46,810 
-                      |     92.46       7.54 |    100.00 
-
-.         
-.         // Step 4: Calculate sample size. 
-.         
-.         summ tid
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-         tid |     46,810     1007372    4272.455    1000001    1014808
-.         local teacher_years = string(r(N), "%9.0fc")
-.         preserve 
-.                 bys tid: keep if _n == 1
-(33,162 observations deleted)
-.                 summ tid
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-         tid |     13,648     1007414     4283.05    1000001    1014808
-.                 local unique_teachers = string(r(N), "%9.0fc")
-.         restore
-.         
-.         // Step 5: Calculate significance indicator variables by school poverty quartile.
-.         
-.         foreach var of varlist t_novice t_veteran_new_hire {
-  2.                 gen sig_`var' = .
-  3.                 xi: reg `var' i.school_poverty_quartile, robust
-  4.                 forval quart = 2/4 {
-  5.                         replace sig_`var' = abs(_b[_Ischool_po_`quart']/_se[_Ischool_po_`quart']) ///
->                                 if school_poverty_quartile == `quart'
-  6.                         replace sig_`var' = 0 if sig_`var' <= 1.96 & school_poverty_quartile ==`quart'
-  7.                         replace sig_`var' = 1 if sig_`var' > 1.96 & school_poverty_quartile == `quart'
-  8.                 }
-  9.                 replace sig_`var' = 0 if school_poverty_quartile == 1
- 10.         }               
-(46,810 missing values generated)
-i.school_pove~e   _Ischool_po_1-4     (naturally coded; _Ischool_po_1 omitted)
-
-Linear regression                               Number of obs     =     46,810
-                                                F(3, 46806)       =       8.61
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.0006
-                                                Root MSE          =     .18522
-
--------------------------------------------------------------------------------
-              |               Robust
-     t_novice |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
---------------+----------------------------------------------------------------
-_Ischool_po_2 |  -.0015899   .0022077    -0.72   0.471     -.005917    .0027372
-_Ischool_po_3 |   .0019637    .002352     0.83   0.404    -.0026464    .0065737
-_Ischool_po_4 |    .011086   .0026327     4.21   0.000     .0059259    .0162462
-        _cons |   .0332755   .0015927    20.89   0.000     .0301538    .0363973
--------------------------------------------------------------------------------
-(13,129 real changes made)
-(13,129 real changes made)
-(0 real changes made)
-(11,351 real changes made)
-(11,351 real changes made)
-(0 real changes made)
-(9,648 real changes made)
-(0 real changes made)
-(9,648 real changes made)
-(12,682 real changes made)
-(46,810 missing values generated)
-i.school_pove~e   _Ischool_po_1-4     (naturally coded; _Ischool_po_1 omitted)
-
-Linear regression                               Number of obs     =     46,810
-                                                F(3, 46806)       =      26.74
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.0018
-                                                Root MSE          =     .26382
-
--------------------------------------------------------------------------------
-              |               Robust
-t_veteran_n~e |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
---------------+----------------------------------------------------------------
-_Ischool_po_2 |    .006685   .0031008     2.16   0.031     .0006074    .0127626
-_Ischool_po_3 |   .0162159   .0033323     4.87   0.000     .0096844    .0227473
-_Ischool_po_4 |   .0312633   .0036783     8.50   0.000     .0240539    .0384728
-        _cons |   .0631604   .0021601    29.24   0.000     .0589265    .0673943
--------------------------------------------------------------------------------
-(13,129 real changes made)
-(0 real changes made)
-(13,129 real changes made)
-(11,351 real changes made)
-(0 real changes made)
-(11,351 real changes made)
-(9,648 real changes made)
-(0 real changes made)
-(9,648 real changes made)
-(12,682 real changes made)
-. 
-.         // Step 6: Collapse to calculate shares of new hires in each quartile.
-.         
-.         collapse (mean) t_novice t_veteran_new_hire sig_*, by(school_poverty_quartile)
-.         foreach var of varlist t_novice t_veteran_new_hire {
-  2.                 replace `var' = 100 * `var'
-  3.         }
-(4 real changes made)
-(4 real changes made)
-. 
-.         // Step 7: Concatenate values and significance asterisks to make value labels.
-.         
-.         foreach var of varlist t_novice t_veteran_new_hire {
-  2.                 tostring(sig_`var'), replace
-  3.                 replace sig_`var' = "*" if sig_`var' == "1"
-  4.                 replace sig_`var' = "" if sig_`var' == "0"
-  5.                 gen `var'_str = string(`var', "%9.0f")
-  6.                 egen `var'_label = concat(`var'_str sig_`var')
-  7.         }
-sig_t_novice was float now str1
-(1 real change made)
-(3 real changes made)
-sig_t_veteran_new_hire was float now str1
-(3 real changes made)
-(1 real change made)
-.         
-.         // Step 8: Get the total new hire percent for each year for graphing.
-.         
-.         gen t_total = t_novice + t_veteran_new_hire
-. 
-.         // Step 9: Create a bar graph using twoway bar and scatter for the labels.
-.         
-.         #delimit ;
-delimiter now ;
-.         twoway (bar t_total school_poverty_quartile, 
->                         fcolor(forest_green) lcolor(forest_green) lwidth(0) barwidth(0.75))
->                 (bar t_novice school_poverty_quartile, 
->                         fcolor(maroon) lcolor(maroon) lwidth(0) barwidth(0.75)) 
->                 (scatter t_total school_poverty_quartile, 
->                         mcolor(none) mlabel(t_veteran_new_hire_label) mlabcolor(white) mlabpos(6)  
->                         mlabsize(small)) 
->                 (scatter t_novice school_poverty_quartile, 
->                         mcolor(none) mlabel(t_novice_label) mlabcolor(white) mlabpos(6)  
->                         mlabsize(small)), 
->                 title("Share of Teachers Who Are New Hires", span) 
->                 subtitle("by School FRPL Quartile", span) 
->                 ytitle("Percent of Teachers") 
->                 ylabel(0(10)30, nogrid labsize(medsmall)) 
->                 xtitle("") 
->                 xlabel(1 "Lowest Poverty" 2 "2nd Quartile" 3 "3rd Quartile" 4 "Highest Poverty", 
->                         labsize(medsmall)) 
->                 legend(order(1 "Experienced New Hires" 2 "Novice New Hires")
->                         ring(0) position(11) symxsize(2) symysize(2) rows(2) size(medsmall) 
->                         region(lstyle(none) lcolor(none) color(none))) 
->                 graphregion(color(white) fcolor(white) lcolor(white)) 
->                 plotregion(color(white) fcolor(white) lcolor(white) margin(2 0 2 0))
->                 note(" " "*Significantly different from schools in the lowest free and reduced 
-> price lunch quartile, at the 95 percent confidence level." "Notes: Sample includes 
-> teachers in the 2010-11 through 2014-15 school years, with `teacher_years' teacher years 
-> and `unique_teachers' unique teachers. Novices were" "in their first year of teaching.", 
->         size(vsmall) span);
-.         #delimit cr
-delimiter now cr
-.         
-.         // Step 10: Save the chart in Stata Graph and EMF formats. If marker labels need to be
-.         // moved by hand using Stata Graph Editor, re-save .gph and .emf files after editing.
-.         
-.         graph export "${graphs}/New_Hires_by_Poverty_Quartile.emf", replace 
-(file C:\Users\ems541\Documents\human-capital-stata\tables_figures/New_Hires_by_Poverty_Quartile.emf written 
-> in Enhanced Metafile format)
-.         graph save "${graphs}/New_Hires_by_Poverty_Quartile.gph", replace 
-(file .\tables_figures/New_Hires_by_Poverty_Quartile.gph saved)
-.         graph export "$docs\Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.png", replace
-(file .\docs\Share_of_Teachers_Who_Are_New_Hires_by_School_Poverty_Level.png written in PNG format)
-. 
-. }
-
-.         
-. 
-. /*** A4. Share of Teachers and Students by Race ***/ 
-. 
-. if ${share_teachers_stu_race}==1 {
-. 
-.         // Step 1: Set up matrix to hold teacher, new teacher, and student results.
-.         
-.         matrix race = J(4, 4, .)
-.         matrix colnames race = race teacher new_teacher student
-.         
-.         // Step 2: Load the Teacher_Year_Analysis data file. 
-.         
-.         use "${analysis}\Teacher_Year_Analysis.dta", clear
-.         isid tid school_year
-.         
-.         // Generate missing teacher race/ethnicity variables
-.         
-.         gen t_black = (t_race_ethnicity == 1)
-.         gen t_asian = (t_race_ethnicity == 2)
-.         gen t_latino = (t_race_ethnicity == 3)
-.         gen t_naam = (t_race_ethnicity == 4)
-.         gen t_white = (t_race_ethnicity == 5)
-.         gen t_mult = (t_race_ethnicity == 6)
-.         gen t_racemiss = (t_race_ethnicity == 7) | (t_race_ethnicity == .)
-.         
-.         // Step 3: Restrict the teacher sample.
-.         
-.         keep if school_year == 2015
-(47,099 observations deleted)
-.         keep if !missing(t_race_ethnicity)
-(3 observations deleted)
-.         keep if !missing(t_new_hire)
-(0 observations deleted)
-.         
-.         // Step 4: Review teacher variables.
-.         
-.         tab school_year t_race_ethnicity, mi
-
-    School |                            Teacher Race/Ethnicity
-      Year | African A  Asian Ame   Hispanic  American       White      Other   Multiple |     Total
------------+-----------------------------------------------------------------------------+----------
-      2015 |     1,182         68        170          2      8,102          9        106 |     9,639 
------------+-----------------------------------------------------------------------------+----------
-     Total |     1,182         68        170          2      8,102          9        106 |     9,639 
-
-.         tab t_new_hire t_white, mi row
-
-+----------------+
-| Key            |
-|----------------|
-|   frequency    |
-| row percentage |
-+----------------+
-
-Teacher Is |        t_white
-  New Hire |         0          1 |     Total
------------+----------------------+----------
-         0 |     1,308      7,170 |     8,478 
-           |     15.43      84.57 |    100.00 
------------+----------------------+----------
-         1 |       229        932 |     1,161 
-           |     19.72      80.28 |    100.00 
------------+----------------------+----------
-     Total |     1,537      8,102 |     9,639 
-           |     15.95      84.05 |    100.00 
-
-.         tab t_new_hire t_black, mi row
-
-+----------------+
-| Key            |
-|----------------|
-|   frequency    |
-| row percentage |
-+----------------+
-
-Teacher Is |        t_black
-  New Hire |         0          1 |     Total
------------+----------------------+----------
-         0 |     7,419      1,059 |     8,478 
-           |     87.51      12.49 |    100.00 
------------+----------------------+----------
-         1 |     1,038        123 |     1,161 
-           |     89.41      10.59 |    100.00 
------------+----------------------+----------
-     Total |     8,457      1,182 |     9,639 
-           |     87.74      12.26 |    100.00 
-
-.         tab t_new_hire t_latino, mi row
-
-+----------------+
-| Key            |
-|----------------|
-|   frequency    |
-| row percentage |
-+----------------+
-
-Teacher Is |       t_latino
-  New Hire |         0          1 |     Total
------------+----------------------+----------
-         0 |     8,340        138 |     8,478 
-           |     98.37       1.63 |    100.00 
------------+----------------------+----------
-         1 |     1,129         32 |     1,161 
-           |     97.24       2.76 |    100.00 
------------+----------------------+----------
-     Total |     9,469        170 |     9,639 
-           |     98.24       1.76 |    100.00 
-
-.         tab t_new_hire t_asian, mi row
-
-+----------------+
-| Key            |
-|----------------|
-|   frequency    |
-| row percentage |
-+----------------+
-
-Teacher Is |        t_asian
-  New Hire |         0          1 |     Total
------------+----------------------+----------
-         0 |     8,422         56 |     8,478 
-           |     99.34       0.66 |    100.00 
------------+----------------------+----------
-         1 |     1,149         12 |     1,161 
-           |     98.97       1.03 |    100.00 
------------+----------------------+----------
-     Total |     9,571         68 |     9,639 
-           |     99.29       0.71 |    100.00 
-
-.                 
-.         // Step 5: Get teacher sample sizes.
-.         
-.         summ tid
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-         tid |      9,639     1007396    4272.493    1000001    1014808
-.         local teacher_years = string(r(N), "%6.0fc")
-.         preserve 
-.                 bys tid: keep if _n == 1
-(0 observations deleted)
-.                 summ tid
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-         tid |      9,639     1007396    4272.493    1000001    1014808
-.                 local unique_teachers = string(r(N), "%6.0fc")
-.         restore
-.         
-.         // Step 6: Store percentages by race for all teachers and newly hired teachers. 
-.         
-.         local i = 1
-.         foreach race of varlist t_white t_black t_latino t_asian {
-  2.                 matrix race[`i', 1] = `i'
-  3.                 summ `race'
-  4.                 matrix race[`i', 2] = 100 * r(mean)
-  5.                 summ `race' if t_new_hire == 1
-  6.                 matrix race[`i', 3] = 100 * r(mean)
-  7.                 local i = `i' + 1
-  8.         }
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-     t_white |      9,639    .8405436    .3661201          0          1
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-     t_white |      1,161    .8027562    .3980894          0          1
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-     t_black |      9,639    .1226268    .3280254          0          1
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-     t_black |      1,161    .1059432    .3078975          0          1
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-    t_latino |      9,639    .0176367    .1316337          0          1
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-    t_latino |      1,161    .0275624     .163786          0          1
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-     t_asian |      9,639    .0070547    .0836997          0          1
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-     t_asian |      1,161    .0103359    .1011825          0          1
-.         
-.         // Step 7: Load the Connect_Step1 data file to get student data.
-.         
-.         use "${analysis}\Student_School_Year.dta", clear
-.         
-.         // Step 8: Make the file unique by sid and school_year.
-.         
-.         keep sid school_year s_race_ethnicity
-.         duplicates drop
-
-Duplicates in terms of all variables
-
-(0 observations are duplicates)
-.         isid sid school_year
-.         
-.         // Step 9: Restrict the student sample.
-.         
-.         keep if school_year == 2015
-(703,563 observations deleted)
-.         keep if !missing(s_race_ethnicity)
-(145 observations deleted)
-.         
-.         // Step 10: Review student variables.
-.         tab school_year s_race_ethnicity, mi
-
-    School |                              Race and Ethnicity
-      Year | African A  Asian Ame   Hispanic  American       White   Multiple          9 |     Total
------------+-----------------------------------------------------------------------------+----------
-      2015 |    40,615      9,141     21,451        489     76,544      5,212         71 |   153,523 
------------+-----------------------------------------------------------------------------+----------
-     Total |    40,615      9,141     21,451        489     76,544      5,212         71 |   153,523 
-
-.         
-.         // Step 11: Create dummy variables for major student race/ethnicity categories.
-.         
-.         gen s_black = (s_race_ethnicity == 1)
-.         gen s_asian = (s_race_ethnicity == 2)
-.         gen s_latino = (s_race_ethnicity == 3)
-.         gen s_white = (s_race_ethnicity == 5)
-.         
-.         // Step 12: Get student sample sizes.
-.         
-.         summ sid
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-         sid |    153,523    197783.1    79614.28      60004     335715
-.         local student_years = string(r(N), "%9.0fc")
-.         preserve
-.                 bys sid: keep if _n == 1
-(0 observations deleted)
-.                 summ sid
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-         sid |    153,523    197783.1    79614.28      60004     335715
-.                 local unique_students = string(r(N), "%9.0fc")
-.         restore
-.         
-.         // Step 13: Store percentages by race for students.
-.         
-.         local i = 1
-.         foreach race of varlist s_white s_black s_latino s_asian{
-  2.                 summ `race'
-  3.                 matrix race[`i', 4] = 100 * r(mean)
-  4.                 local i = `i' + 1
-  5.         }
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-     s_white |    153,523    .4985833    .4999996          0          1
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-     s_black |    153,523    .2645532    .4410964          0          1
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-    s_latino |    153,523     .139725    .3467026          0          1
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-     s_asian |    153,523    .0595416    .2366363          0          1
-.         
-.         // Step 14: Replace the dataset with the matrix of results.
-.         
-.         clear 
-.         svmat race, names(col)
-number of observations will be reset to 4
-Press any key to continue, or Break to abort
-number of observations (_N) was 0, now 4
-.         
-.         // Step 15: Graph the results.
-.         
-.         #delimit ;
-delimiter now ;
-.         graph bar teacher new_teacher student, 
->                 bar(1, fcolor(dknavy) lcolor(dknavy)) 
->                 bar(2, fcolor(dknavy*.7) lcolor(dknavy*.7)) 
->                 bar(3, fcolor(maroon) lcolor(maroon))
->                 blabel(bar, position(outside) color(black) format(%10.0f))
->                 over(race, relabel(1 "White" 2 "Black" 3 "Latino" 4 "Asian") 
->                         label(labsize(medsmall)))
->                 title("Share of Teachers and Students", span)
->                 subtitle("by Race", span)
->                 ytitle("Percent", size(medsmall))
->                 ylabel(0(20)100, labsize(medsmall) nogrid)
->                 legend(order(1 "All Teachers" 2 "Newly Hired Teachers" 3 "Students")
->                         position(6) symxsize(2) symysize(2) rows(1)
->                         size(medsmall) region(lstyle(none) lcolor(none) color(none)))
->                 graphregion(color(white) fcolor(white) lcolor(white))
->                 plotregion(color(white) fcolor(white) lcolor(white) margin(5 5 2 0))
->                 note(" " "Notes: Sample includes teachers and students in the 2014-15 school year, 
-> with `unique_teachers' unique teachers and `unique_students' unique students.", size(vsmall) 
-> span);
-.                         #delimit cr
-delimiter now cr
-.         
-.         // Step 16: Save the chart.
-.         
-.         graph export "${graphs}/Share_Teachers_Students_by_Race.emf", replace 
-(file C:\Users\ems541\Documents\human-capital-stata\tables_figures/Share_Teachers_Students_by_Race.emf writte
-> n in Enhanced Metafile format)
-.         graph save "${graphs}/Share_Teachers_Students_by_Race.gph", replace 
-(file .\tables_figures/Share_Teachers_Students_by_Race.gph saved)
-.         graph export "$docs\Share_of_Teachers_and_Students_by_Race.png", replace
-(file .\docs\Share_of_Teachers_and_Students_by_Race.png written in PNG format)
-. }
 
 . 
-. log close
-      name:  <unnamed>
-       log:  C:\Users\ems541\Documents\human-capital-stata\logs\Analyze_Recruitment.txt
-  log type:  text
- closed on:   8 Mar 2018, 15:23:18
--------------------------------------------------------------------------------------------------------------
+end of do-file
+
+. keep if !missing(current_tre_e)
+(50,732 observations deleted)
+
+. tab sch_high
+
+  School Is |
+High School |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      5,956       99.12       99.12
+          1 |         53        0.88      100.00
+------------+-----------------------------------
+      Total |      6,009      100.00
+
+. tab sch_middle
+
+  School Is |
+     Middle |
+     School |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,329       72.04       72.04
+          1 |      1,680       27.96      100.00
+------------+-----------------------------------
+      Total |      6,009      100.00
+
+. tab sch_elem
+
+  School Is |
+ Elementary |
+     School |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,733       28.84       28.84
+          1 |      4,276       71.16      100.00
+------------+-----------------------------------
+      Total |      6,009      100.00
+
+. do "C:\Users\ems541\Documents\OpenSDPems\human-capital-stata\programs\Analyze_Retention.do"
+
+. /*****************************************************************************************
+> * SDP Version 1.0
+> * Last Updated: March 8, 2018
+> * File name: Analyze_Retention.do
+> * Author(s): Strategic Data Project
+> *  
+> * Description: This program produces analyses that show teacher retention patterns by:
+> * 1. Describing the overall annual shares of teachers who stay in the same school, 
+> *    transfer, and leave teaching in the agency.
+> * 2. Describing the shares of teachers who transfer and leave over time.
+> * 3. Examining the extent to which retention patterns differ according to school 
+> *    poverty characteristics.
+> * 4. Examining whether the most and least effective teachers are being differentially
+> *    retained.
+> * 5. Describing the retention trajectory of a cohort of novice teachers.
+> *
+> * Inputs: Teacher_Year_Analysis.dta
+> *
+> *****************************************************************************************/
+. 
+.         // Close log file if open and set up environment.
+.         
+.         capture log close

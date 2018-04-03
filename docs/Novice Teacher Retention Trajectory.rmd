@@ -50,7 +50,7 @@ log using "${log}\Analyze_Retention.txt", text replace
 </div>
 </div>
 
-[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Examine the Retention Trajectory for Novice Teachers
+[OpenSDP Analysis](http://opensdp.github.io/analysis) / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Examine the Retention Trajectory for Novice Teachers
 
 ![](Novice_Teacher_Retention_Trajectory.png)
 

@@ -412,7 +412,7 @@ span size(vsmall));
 
 if $retention_teacher_effectiveness == 1 {
 
-	// Step 1: Choose the subject (math or ela) and school level (elem or 
+	// Step 1: Choose the subject (m or e) and school level (elem or
 	// middle) for the analysis. Note: to make multiple charts at the same time, 
 	// put loops for subject and level around the analysis and graphing code.
 	// To include all grade levels in the analysis, comment out the local level 
@@ -430,15 +430,16 @@ if $retention_teacher_effectiveness == 1 {
 	// added estimates and next-year retention status are available. Keep only 
 	// records for which one-year teacher effectiveness estimates are available. 
 	// Keep employees who are teachers. If school level restriction is chosen, 
-	// keep only records from either elementary or middle schools.
+	// keep only records from either elementary, middle, or high schools.
 	
 	keep if school_year >= 2010 & school_year <= 2014
 	keep if !missing(current_tre_`subject')
+	keep if !(sch_high == 1)
 	if "`level'" == "elem" {	
-		keep if school_lvl == "Elem"
+		keep if sch_elem == 1
 	}
 	if "`level'" == "middle" {
-		keep if school_lvl == "Mid"
+		keep if sch_middle == 1
 	}
 
 	// Step 4: Review variables.
@@ -518,15 +519,16 @@ if $retention_teacher_effectiveness == 1 {
 	
 	local gradespan "5th through 8th"
 	
+	if "`level'" == "elem" {
+		local subj_title "Elementary School `subj_title'"
+		local gradespan "5th"
+	}
+	
 	if "`level'" == "middle" {
-		local level_title "Middle "
+		local subj_title "Middle School `subj_title'"
 		local gradespan "6th through 8th"
 	}
 	
-	if "`level'" == "elem" {
-		local level_title "Elementary "
-		local gradespan "5th"
-	}
 	
 	// Step 12: Make chart.
 	
@@ -575,6 +577,7 @@ reliability. Retention analysis is based on one-year retention rates.",
 	
 	graph save "$graphs\Retention_by_Effectiveness_Tercile_`subj_title'.gph", replace
 	graph export "$graphs\Retention_by_Effectiveness_Tercile_`subj_title'.emf", replace
+	graph export "$docs\Teacher_Turnover_by_Teacher_Effectiveness_Tercile.png", replace
 	
 }
 

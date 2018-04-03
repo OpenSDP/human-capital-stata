@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  C:\Users\ems541\Documents\human-capital-stata\logs\Analyze_Evaluation.txt
+       log:  C:\Users\ems541\Documents\OpenSDPems\human-capital-stata\logs\Analyze_Evaluation.txt
   log type:  text
- opened on:   8 Mar 2018, 15:42:51
+ opened on:  29 Mar 2018, 16:44:40
 
 . 
 .         // Set program switches for recruitment analyses. Set switch to 0 to skip the 
@@ -10,25 +10,25 @@
 . 
 .         // Switches
 .         
-.         global overall_teacher_effects                                  = 1
+.         global overall_teacher_effects                                  = 0
 
 .         global predictive_teacher_effects_avg                   = 0
 
-.         global predictive_teacher_effects_dist                  = 0
+.         global predictive_teacher_effects_dist                  = 1
 
 . 
 . /*** D1. Distribution of Teacher Effects ***/
 . 
 . if ${overall_teacher_effects} == 1 {
 . 
-.         // Step 1: Choose the subject (math or ela) and school level (elem or 
-.         // middle) for the analysis. Note: to make multiple charts at the same time, 
-.         // put loops for subject and level around the analysis and graphing code.
-.         // To include all grade levels in the analysis, comment out the local level 
-.         // command below.
+.         // Step 1: Choose the subject (math [m] or ela [e]) and school level (elem 
+.         // or middle) for the analysis. Note: to make multiple charts at the 
+.         // same time, put loops for subject and level around the analysis and 
+.         // graphing code. To include all grade levels in the analysis, comment 
+.         // out the local level command below.
 .         
 .         local subject m
-.         *local level middle
+.         local level middle
 .         
 .         // Step 2: Load the Teacher_Year_Analysis file containing value-added estimates.
 .         
@@ -42,56 +42,27 @@
 .         // is chosen, keep only records from either elementary or middle schools.
 .         
 .         keep if school_year >= 2010 & school_year <= 2015
-(0 observations deleted)
-.         keep if !missing(tre_`subject')
-(50,651 observations deleted)
+.         keep if !missing(current_tre_`subject')
+.         keep if !(sch_high == 1)
 .         if "`level'" == "elem" {        
-.                 keep if school_lvl == "Elem"
+.                 keep if sch_elem == 1
 .         }
 .         if "`level'" == "middle" {
-.                 keep if school_lvl == "Mid"
+.                 keep if sch_middle == 1
 .         }
 . 
 .         // Step 4: Review variables.
 .         
 .         tab school_year
-
-School Year |      Freq.     Percent        Cum.
-------------+-----------------------------------
-       2010 |        997       16.37       16.37
-       2011 |      1,016       16.68       33.05
-       2012 |        980       16.09       49.15
-       2013 |        966       15.86       65.01
-       2014 |      1,039       17.06       82.07
-       2015 |      1,092       17.93      100.00
-------------+-----------------------------------
-      Total |      6,090      100.00
 .         bysort tid: gen tag = _n == 1
 .         summ tre_`subject' if tag == 1, detail
-
-            Math 2010-2015 Pooled Teacher Effects
--------------------------------------------------------------
-      Percentiles      Smallest
- 1%     -.250807      -.3398095
- 5%    -.1892487      -.3321132
-10%    -.1480517      -.3065061       Obs               2,266
-25%    -.0768438      -.2848039       Sum of Wgt.       2,266
-
-50%    -.0091541                      Mean          -.0020112
-                        Largest       Std. Dev.      .1168169
-75%     .0745983       .3925086
-90%     .1485148       .4333438       Variance       .0136462
-95%     .1990773       .5404382       Skewness       .3545142
-99%     .3026183       .5744016       Kurtosis       3.502438
 .         drop tag
 .         
 .         // Step 5: Change data from teacher-year uniqueness level to teacher level by keeping
 .         // only teacher id and pooled estimate and then dropping duplicate records.
 .         
 .         keep tid tre_`subject'
-.         duplicates drop tid tre_`subject'
-force option required with duplicates drop varlist
-r(198);
+.         duplicates drop 
 .         isid tid
 .         
 .         // Step 6: Get sample size.
@@ -124,25 +95,25 @@ r(198);
 .         
 .         // Step 9: Define subject and school level titles.
 .         
-.         if "`subject'" == "math" {
+.         if "`subject'" == "m" {
 .                 local subj_foot "math"
 .                 local subj_title "Math"
 .         }
 .         
-.         if "`subject'" == "ela" {
+.         if "`subject'" == "e" {
 .                 local subj_foot "English/Language Arts"
 .                 local subj_title "ELA"
 .         }
 .         local gradespan "5th through 8th"
 . 
-.         if "`level'" == "middle" {
-.                 local subj_title "Middle School `subj_title'"
-.                 local gradespan "6th through 8th"
-.         }
-.         
 .         if "`level'" == "elem" {
 .                 local subj_title "Elementary School `subj_title'"
 .                 local gradespan "5th"
+.         }
+.         
+.         if "`level'" == "middle" {
+.                 local subj_title "Middle School `subj_title'"
+.                 local gradespan "6th through 8th"
 .         }
 . 
 .         // Step 10: Make chart.
@@ -180,7 +151,7 @@ delimiter now ;
 >                 plotregion(color(white) fcolor(white) lcolor(white) margin(5 5 2 0))
 >                 
 >                 note(" " "Notes: Sample includes `unique_teachers' `gradespan' grade `subj_foot'
-> teachers in school years 2000-10 through 2013-14." "Teacher effects are measured in
+> teachers in school years 2009-10 through 2014-15." "Teacher effects are measured in
 > student test score standard deviations, with teacher-specific shrinkage factors applied
 > to adjust for" "differences in sample reliability.", size(vsmall) span);
 .         #delimit cr     
@@ -188,33 +159,490 @@ delimiter now cr
 .         
 .         // Step 11: Save chart.
 .         
-.         graph save "${graphs}\D1_Overall_Teacher_Effects_`subj_title'.gph" , replace
-.         graph export "${graphs}\D1_Overall_Teacher_Effects_`subj_title'.emf" , replace
+.         graph save "${graphs}\Overall_Teacher_Effects_`subj_title'.gph" , replace
+.         graph export "${graphs}\Overall_Teacher_Effects_`subj_title'.emf" , replace
+.         graph export "${docs}\Overall_Teacher_Effects_`subj_title'.png" , replace
 .                 
 . }
-r(198);
 
-end of do-file
+. 
+. /*** 2. Average Teacher Effects in Third Year by Quartile Rank During Previous Two Years ***/
+. 
+. if ${predictive_teacher_effects_avg} == 1 {
+. 
+.         // Step 1: Choose the subject (math [m] or ela [e]) and school level (elem 
+.         // or middle) for the analysis. Note: to make multiple charts at the 
+.         // same time, put loops for subject and level around the analysis and 
+.         // graphing code. To include all grade levels in the analysis, comment 
+.         // out the local level command below.
+.         
+.         local subject m
+.         local level middle
+.         
+.         // Step 2: Load the Teacher_Year_Analysis file containing value-added estimates.
+.         
+.         use "${analysis}/Teacher_Year_Analysis.dta", clear
+.         isid tid school_year
+.         
+.         // Step 3: Restrict the sample. Keep years for which teacher effects value added 
+.         // estimates are available. Keep only records for which single-year teacher
+.         // effectiveness estimates are available. Keep only employees who are teachers. 
+.         // If school level restriction is chosen, keep only records from either elementary
+.         // or middle schools.
+.         
+.         keep if school_year >= 2012 & school_year <= 2015
+.         keep if !missing(current_tre_`subject')
+.         keep if !(sch_high == 1)
+.         if "`level'" == "elem" {        
+.                 keep if sch_elem == 1
+.         }
+.         if "`level'" == "middle" {
+.                 keep if sch_middle == 1
+.         }
+. 
+.         // Step 4: Review variables.
+.         
+.         tab school_year
+.         summ current_tre_`subject', detail
+.         summ curr2year_tre_`subject', detail
+.         
+.         // Step 5: Identify the most recent year a teacher is present in the data and tag 
+.         // as "year 3."
+.         
+.         egen max_school_year = max(school_year), by(tid)
+.         gen year3 = max_school_year == school_year
+.         drop max_school_year
+.         tab year3, mi
+.         
+.         // Step 6: Set time series structure and use lead operators to identify years 2 
+.         // and 1. 
+.         
+.         tsset tid school_year   
+.         gen year1 = 0
+.         gen year2 = 0
+.         bysort tid: replace year2 = 1 if F.year3 == 1
+.         bysort tid: replace year1 = 1 if F.year2 == 1
+.         tab year2 year3, mi
+.         tab year1 year3, mi
+.         
+.         // Step 7: Keep a balanced panel which includes only teachers with observations 
+.         // for all 3 years.
+.         
+.         bysort tid: egen balanced = max(year1)
+.         keep if balanced == 1
+.         drop balanced
+.         unique tid
+. 
+.         // Step 8: Assign teachers to quartiles based on two-year pooled 
+.         // teacher effects in year 2, and generate dummy variables for
+.         // quartiles.
+.         
+.         assert !missing(curr2year_tre_`subject') if year2 == 1
+.         xtile quart_temp = curr2year_tre_`subject' if year2 == 1, nq(4)
+.         bysort tid: egen quart = max(quart_temp)
+.         tab quart if year2 == 1, mi
+.         tab quart, gen(quart)
+.         
+.         // Step 9: Drop records for years 1 and 2, reducing data to one record per teacher.
+.         
+.         keep if year3 == 1
+.         isid tid
+.         
+.         // Step 10: Get sample size.
+.         
+.         sum tid
+.         local unique_teachers = string(r(N), "%9.0fc")
+. 
+.         // Step 11: Get significance.
+.         
+.         gen sig = 0
+.         forval quartile = 1/4 {
+  2.                 reg current_tre_`subject' quart`quartile', robust
+  3.                 test _b[quart`quartile'] == 0
+  4.                 gen sig`quartile' = r(p) < .05
+  5.                 replace sig = sig`quartile' if quart`quartile' == 1
+  6.         }
+.         
+.         // Step 12: Collapse the data for graphing.
+.         
+.         collapse (mean) current_tre_`subject' sig, by(quart) 
+.                         
+.         // Step 13: Concatenate value labels and significance asterisks.
+.         
+.         gen tre_str = string(current_tre_`subject', "%9.3f")
+.         gen star = ""
+.         forval quartile = 1/4 { 
+  2.                 replace star = "*" if quart == `quartile' & sig == 1 
+  3.         } 
+.         egen tre_label = concat(tre_str star), format(%9.3f)    
+.         
+.         // Step 14: Define subject and school level titles.
+.         
+.         if "`subject'" == "m" {
+.                 local subj_foot "math"
+.                 local subj_title "Math"
+.         }
+.         
+.         if "`subject'" == "e" {
+.                 local subj_foot "English/Language Arts"
+.                 local subj_title "ELA"
+.         }
+.         local gradespan "5th through 8th"
+. 
+.         if "`level'" == "elem" {
+.                 local subj_title "Elementary School `subj_title'"
+.                 local gradespan "5th"
+.         }
+.         
+.         if "`level'" == "middle" {
+.                 local subj_title "Middle School `subj_title'"
+.                 local gradespan "6th through 8th"
+.         }
+. 
+.         // Step 15: Make chart.
+.         
+.         #delimit ;
+delimiter now ;
+.         twoway (bar current_tre_`subj' quart if quart == 4, 
+>                         horizontal fcolor(dkorange) lcolor(dkorange) lwidth(0))
+>                 (bar current_tre_`subj' quart if quart == 3, 
+>                         horizontal fcolor(forest_green) lcolor(forest_green) lwidth(0))
+>                 (bar current_tre_`subj' quart if quart == 2, 
+>                         horizontal fcolor(maroon) lcolor(maroon) lwidth(0))
+>                 (bar current_tre_`subj' quart if quart == 1, 
+>                         horizontal fcolor(dknavy) lcolor(dknavy) lwidth(0))
+>                 (scatter quart current_tre_`subj' if current_tre_`subj' >= 0,
+>                         mlabel(tre_label) msymbol(i) mlabpos(3) mlabcolor(black) mlabgap(.2))
+>                 (scatter quart current_tre_`subj' if current_tre_`subj' < 0,
+>                         mlabel(tre_label) msymbol(i) mlabpos(9) mlabcolor(black) mlabgap(.2)),
+>                 title("`subj_title' Teacher Effects in Third Year", span)
+>                 subtitle("by Quartile Rank During Previous Two Years", span)
+>                 xtitle("Current Average Teacher Effect", size(medsmall))
+>                         xscale(range(-0.15 (.05) 0.15))
+>                         xlabel(-0.15 (.05) 0.15, format(%9.2f) labsize(medsmall)) 
+>                 ytitle("Previous Teacher Effects Quartile", size(medsmall))
+>                         yscale(range(1(1)4))
+>                         ylabel(1 `""Least" "Effective""' 2 "2nd" 3 "3rd" 4 `""Most" "Effective""', 
+>                         labsize(medsmall) nogrid)
+>                 legend(off)
+>                 graphregion(color(white) fcolor(white) lcolor(white))
+>                 plotregion(color(white) fcolor(white) lcolor(white) margin(5 5 2 2))
+>                 
+>                 note(" " "*Significantly different from zero, at the 95 percent confidence level." 
+> "Notes: Sample includes `unique_teachers' `gradespan' grade `subj_foot' teachers
+> with three years of teacher effects estimates in school" "years 2011-12 through 2014-15.
+> Teacher effects are measured in student test score standard deviations, with
+> teacher-specific" "shrinkage factors applied to adjust for differences in sample
+> reliability.", 
+>                 span size(vsmall));
+.         #delimit cr
+delimiter now cr
+.                          
+.         // Step 16: Save chart.
+.         
+.         graph save "${graphs}\Predictive_Tchr_Effects_Avg_`subj_title'.gph" , replace
+.         graph export "${graphs}\Predictive_Tchr_Effects_Avg_`subj_title'.emf" , replace
+.         graph export "${docs}\Predictive_Teacher_Effects_Average_`subj_title'.png" , replace
+.         
+. } 
 
-r(198);
+. 
+. /*** 3. Distribution of Teacher Effects in Third Year by Quartile Rank During Previous Two Years ***/
+. 
+. if ${predictive_teacher_effects_dist} == 1 {
+. 
+.         // Step 1: Choose the subject (math [m] or ela [e]) and school level (elem 
+.         // or middle) for the analysis. Note: to make multiple charts at the 
+.         // same time, put loops for subject and level around the analysis and 
+.         // graphing code. To include all grade levels in the analysis, comment 
+.         // out the local level command below.
+.         
+.         local subject m
+.         local level elem
+.         
+.         // Step 2: Load the Teacher_Year_Analysis file containing value-added estimates.
+.         
+.         use "${analysis}/Teacher_Year_Analysis.dta", clear
+.         isid tid school_year
+.         
+.         // Step 3: Restrict the sample. Keep years for which teacher effects value added 
+.         // estimates are available. Keep only records for which single-year teacher
+.         // effectiveness estimates are available. Keep only employees who are teachers. 
+.         // If school level restriction is chosen, keep only records from either elementary
+.         // or middle schools.
+.         
+.         keep if school_year >= 2012 & school_year <= 2015
+(19,039 observations deleted)
+.         keep if !missing(current_tre_`subject')
+(33,625 observations deleted)
+.         keep if !(sch_high == 1)
+(69 observations deleted)
+.         if "`level'" == "elem" {        
+.                 keep if sch_elem == 1
+(1,069 observations deleted)
+.         }
+.         if "`level'" == "middle" {
+.                 keep if sch_middle == 1
+.         }
+. 
+.         // Step 4: Review variables.
+.         
+.         tab school_year
 
-. duplicates drop varlist
-variable varlist not found
-r(111);
+School Year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       2012 |        732       24.91       24.91
+       2013 |        699       23.78       48.69
+       2014 |        730       24.84       73.53
+       2015 |        778       26.47      100.00
+------------+-----------------------------------
+      Total |      2,939      100.00
+.         summ current_tre_`subject', detail
 
-. duplicates report
+      Math Single-Year Teacher Effects for Given School
+                            Year
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%    -.1964234      -.2937111
+ 5%    -.1434645      -.2937111
+10%    -.1190303      -.2811667       Obs               2,939
+25%    -.0670885      -.2811667       Sum of Wgt.       2,939
 
-Duplicates in terms of all variables
+50%    -.0071984                      Mean            -.00281
+                        Largest       Std. Dev.      .0928258
+75%     .0565362       .3117071
+90%      .118467       .3257116       Variance       .0086166
+95%     .1573673        .343787       Skewness       .3262839
+99%     .2468979       .3748018       Kurtosis       3.380545
+.         summ curr2year_tre_`subject', detail
 
---------------------------------------
-   copies | observations       surplus
-----------+---------------------------
-        1 |          768             0
-        2 |          956           478
-        3 |         1146           764
-        4 |          840           630
-        5 |          940           752
-        6 |         1440          1200
---------------------------------------
+       Math Two-Year Teacher Effects for Given School
+                            Year
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%    -.2355981      -.3815167
+ 5%    -.1740288      -.3453888
+10%     -.136014      -.3228148       Obs               2,215
+25%    -.0753099      -.3017798       Sum of Wgt.       2,215
 
-. exit, clear
+50%      -.01174                      Mean           .0038323
+                        Largest       Std. Dev.      .1187158
+75%     .0750613       .4804861
+90%      .160068       .4914176       Variance       .0140934
+95%     .2181677       .4914176       Skewness        .575873
+99%     .3433392       .5650262       Kurtosis       3.923812
+.         
+.         // Step 5: Identify the most recent year a teacher is present in the data and tag 
+.         // as "year 3."
+.         
+.         egen max_school_year = max(school_year), by(tid)
+.         gen year3 = max_school_year == school_year
+.         drop max_school_year
+.         tab year3, mi
+
+      year3 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,583       53.86       53.86
+          1 |      1,356       46.14      100.00
+------------+-----------------------------------
+      Total |      2,939      100.00
+.         
+.         // Step 6: Set time series structure and use lead operators to identify years 2 
+.         // and 1. 
+.         
+.         tsset tid school_year   
+       panel variable:  tid (unbalanced)
+        time variable:  school_year, 2012 to 2015, but with gaps
+                delta:  1 unit
+.         gen year1 = 0
+.         gen year2 = 0
+.         bysort tid: replace year2 = 1 if F.year3 == 1
+(769 real changes made)
+.         bysort tid: replace year1 = 1 if F.year2 == 1
+(457 real changes made)
+.         tab year2 year3, mi
+
+           |         year3
+     year2 |         0          1 |     Total
+-----------+----------------------+----------
+         0 |       814      1,356 |     2,170 
+         1 |       769          0 |       769 
+-----------+----------------------+----------
+     Total |     1,583      1,356 |     2,939 
+
+.         tab year1 year3, mi
+
+           |         year3
+     year1 |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     1,126      1,356 |     2,482 
+         1 |       457          0 |       457 
+-----------+----------------------+----------
+     Total |     1,583      1,356 |     2,939 
+
+.         
+.         // Step 7: Keep a balanced panel which includes only teachers with observations 
+.         // for all 3 years.
+.         
+.         bysort tid: egen balanced = max(year1)
+.         keep if balanced == 1
+(1,314 observations deleted)
+.         drop balanced
+.         unique tid
+Number of unique values of tid is  457
+Number of records is  1625
+. 
+.         // Step 8: Assign teachers to quartiles based on two-year pooled teacher effects
+.         // in year 2, and generate dummy variables for quartiles.
+.         
+.         assert !missing(curr2year_tre_`subject') if year2 == 1
+.         xtile quart_temp = curr2year_tre_`subject' if year2 == 1, nq(4)
+.         bysort tid: egen quart = max(quart_temp)
+.         tab quart if year2 == 1, mi
+
+      quart |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        115       25.16       25.16
+          2 |        115       25.16       50.33
+          3 |        113       24.73       75.05
+          4 |        114       24.95      100.00
+------------+-----------------------------------
+      Total |        457      100.00
+.         tab quart, gen(quart)
+
+      quart |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        415       25.54       25.54
+          2 |        407       25.05       50.58
+          3 |        402       24.74       75.32
+          4 |        401       24.68      100.00
+------------+-----------------------------------
+      Total |      1,625      100.00
+.         
+.         // Step 9: Drop records for years 1 and 2, reducing data to one record per teacher.
+.         
+.         keep if year3 == 1
+(1,168 observations deleted)
+.         isid tid
+.         
+.         // Step 10: Get sample size.
+.         
+.         sum tid
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         tid |        457     1007453    4212.073    1000016    1014787
+.         local unique_teachers = string(r(N), "%9.0fc")
+.         
+.         // Step 11: Get quartile means and the difference between means for quartiles 
+.         // 1 and 4.
+.         
+.         forval quartile = 1/4 {
+  2.                 summ current_tre_`subject' if quart == `quartile' 
+  3.                 local mean_q`quartile' = r(mean)
+  4.         }
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+current_tr~m |        115   -.0306496    .0848739  -.2520088   .2053264
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+current_tr~m |        115   -.0048859    .0949251  -.2164748   .2572598
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+current_tr~m |        113    .0181999    .0933661  -.2027253    .229785
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+current_tr~m |        114    .0586455    .1056049   -.195032   .3088904
+.         local diff = round(`mean_q4' - `mean_q1', .01)
+.         
+.         // Step 12: Set positions for lines and text on chart.
+.         
+.         local lnht = 8.5
+.         local txtht = `lnht' + .5
+.         local diff_pl = `mean_q1' + `diff' * .5
+.         
+.         // Step 13: Define subject and school level titles.
+.         
+.         if "`subject'" == "m" {
+.                 local subj_foot "math"
+.                 local subj_title "Math"
+.         }
+.         
+.         if "`subject'" == "e" {
+.                 local subj_foot "English/Language Arts"
+.                 local subj_title "ELA"
+.         }
+.         local gradespan "5th through 8th"
+. 
+.         if "`level'" == "elem" {
+.                 local subj_title "Elementary School `subj_title'"
+.                 local gradespan "5th"
+.         }
+.         
+.         if "`level'" == "middle" {
+.                 local subj_title "Middle School `subj_title'"
+.                 local gradespan "6th through 8th"
+.         }
+.         
+. 
+.         // Step 14: Make chart.
+.         
+.         #delimit ;
+delimiter now ;
+.                 twoway (pcarrowi `lnht' `mean_q4' `lnht' `mean_q1',
+>                         color(cranberry) mlwidth(medthin) lwidth(medthin))
+>                 (pcarrowi `lnht' `mean_q1' `lnht' `mean_q4',
+>                         color(cranberry) mlwidth(medthin) lwidth(medthin))
+>                 (kdensity current_tre_`subject' if quart == 1, 
+>                         lcolor(navy) area(1) 
+>                         xline(`mean_q1', lpattern(dash) lcolor(navy)))  
+>                 (kdensity current_tre_`subject' if quart == 4, 
+>                         lcolor(orange) area(1) lwidth(medium)
+>                         xline(`mean_q4', lpattern(dash) lcolor(orange))),
+>                 text(`txtht' `diff_pl' "`diff'", placement(0))
+>                 title("Distribution of `subj_title'" "Teacher Effects in Third Year", span)
+>                 subtitle("by Quartile Rank During Previous Two Years", span)
+>                 xtitle("Teacher Effects", size(medsmall))
+>                         xscale(range(-.25(.05).25))
+>                         xlabel(-.25(.05).25, labsize(medsmall))
+>                 ytitle("",) 
+>                         yscale(range(0(2)12)) 
+>                         ylabel(none)
+>                 legend(order(3 4) rows(1) label(3 "Bottom Quartile") 
+>                         label(4 "Top Quartile"))
+>                 legend(symxsize(5) ring(1) size(medsmall)
+>                         region(lstyle(none) lcolor(none) color(none))) 
+>                 graphregion(color(white) fcolor(white) lcolor(white))
+>                 plotregion(color(white) fcolor(white) lcolor(white) margin(5 5 2 0))
+>                 
+>                 note(" " "Notes: Sample includes `unique_teachers' `gradespan' grade `subj_foot'
+> teachers with three years of teacher effects estimates in school" "years 2011-12 through
+> 2014-15. Teacher effects are measured in student test score standard deviations, with
+> teacher-specific" "shrinkage factors applied to adjust for differences in sample
+> reliability.", span size(vsmall));
+.         #delimit cr
+delimiter now cr
+. 
+.         // Step 15: Save chart.
+.         
+.         graph save "${graphs}\Predictive_Tchr_Effects_Dist_`subj_title'.gph" , replace
+(file .\tables_figures\Predictive_Tchr_Effects_Dist_Elementary School Math.gph saved)
+.         graph export "${graphs}\Predictive_Tchr_Effects_Dist_`subj_title'.emf" , replace
+(file C:\Users\ems541\Documents\OpenSDPems\human-capital-stata\tables_figures\Predictive_Tchr_Effects_Dist_Elementary School Math.emf written in Enhanced Metafile f
+> ormat)
+.         graph export "${docs}\Predictive_Teacher_Effects_Distribution_`subj_title'.png" , replace
+(file .\docs\Predictive_Teacher_Effects_Distribution_Elementary School Math.png written in PNG format)
+.         
+. } 
+
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\ems541\Documents\OpenSDPems\human-capital-stata\logs\Analyze_Evaluation.txt
+  log type:  text
+ closed on:  29 Mar 2018, 16:44:41
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------

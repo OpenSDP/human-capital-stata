@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Calculate the Share of Teachers Who Are New Hires
+[OpenSDP Analysis](http://opensdp.github.io/analysis) / [Human Capital Analysis: Recruitment](Human_Capital_Analysis_Recruitment.html) / Calculate the Share of Teachers Who Are New Hires
 
 ![](Share_of_Teachers_Who_Are_New_Hires.png)
 

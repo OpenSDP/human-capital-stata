@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  C:\Users\ems541\Documents\human-capital-stata\logs\Analyze_Retention.txt
+       log:  C:\Users\ems541\Documents\OpenSDPems\human-capital-stata\logs\Analyze_Retention.txt
   log type:  text
- opened on:   8 Mar 2018, 15:51:59
+ opened on:  29 Mar 2018, 09:38:46
 
 . 
 .         // Set program switches for development analyses. Set switch to 0 to skip the 
@@ -134,13 +134,17 @@ delimiter now ;
 >                         (4, color(dkorange))
 >                 
 >                 plabel
->                         (1 percent, gap(5) format("%2.0f") color(white) size(medsmall) placement(3)) 
+>                         (1 percent, gap(5) format("%2.0f") color(white) size(medsmall) placement(
+> 3)) 
 >                 plabel
->                         (2 percent, gap(5) format("%2.0f") color(white) size(medsmall) placement(0)) 
+>                         (2 percent, gap(5) format("%2.0f") color(white) size(medsmall) placement(
+> 0)) 
 >                 plabel
->                         (3 percent, gap(5) format("%2.0f") color(white) size(medsmall) placement(3)) 
+>                         (3 percent, gap(5) format("%2.0f") color(white) size(medsmall) placement(
+> 3)) 
 >                 plabel
->                         (4 percent, gap(5) format("%2.0f") color(white) size(medsmall) placement(3)) 
+>                         (4 percent, gap(5) format("%2.0f") color(white) size(medsmall) placement(
+> 3)) 
 >                 plabel
 >                         (1 "Stay", 
 >                                 color(black) size(medsmall) placement(9) gap(20))  
@@ -168,8 +172,8 @@ delimiter now cr
 .         graph save "$graphs\Average_Teacher_Retention.gph", replace
 (file .\tables_figures\Average_Teacher_Retention.gph saved)
 .         graph export "$graphs\Average_Teacher_Retention.emf", replace
-(file C:\Users\ems541\Documents\human-capital-stata\tables_figures\Average_Teacher_Retention.emf written in E
-> nhanced Metafile format)
+(file C:\Users\ems541\Documents\OpenSDPems\human-capital-stata\tables_figures\Average_Teacher_Reten
+> tion.emf written in Enhanced Metafile format)
 .         
 . } 
 
@@ -317,7 +321,8 @@ delimiter now cr
   2.                 gen sig_`var' = .
   3.                 xi: logit `var' i.school_year, robust
   4.                 forval year = 2011/2014 {
-  5.                         replace sig_`var' = abs(_b[_Ischool_ye_`year'] / _se[_Ischool_ye_`year']) ///
+  5.                         replace sig_`var' = abs(_b[_Ischool_ye_`year'] / _se[_Ischool_ye_`year
+> ']) ///
 >                                 if school_year == `year'
   6.                         replace sig_`var' = 0 if sig_`var' <= 1.96 & school_year == `year'
   7.                         replace sig_`var' = 1 if sig_`var' > 1.96 & school_year == `year'
@@ -454,7 +459,8 @@ delimiter now ;
 >                 yscale(range(0(10)60)) 
 >                 ylabel(0(10)60, nogrid labsize(medsmall)) 
 >                 xtitle("")
->                 xlabel(1 "2009-10" 2 "2010-11" 3 "2011-12" 4 "2012-13" 5 "2013-14", labsize(medsmall))
+>                 xlabel(1 "2009-10" 2 "2010-11" 3 "2011-12" 4 "2012-13" 5 "2013-14", labsize(medsm
+> all))
 >                 legend(order(1 "Transfer Schools" 2 "Leave")
 >                         ring(0) position(11) symxsize(2) symysize(2) rows(2) size(medsmall) 
 >                         region(lstyle(none) lcolor(none) color(none))) 
@@ -474,8 +480,8 @@ delimiter now cr
 .         graph save "$graphs\Retention_by_School_Year.gph", replace 
 (file .\tables_figures\Retention_by_School_Year.gph saved)
 .         graph export "$graphs\Retention_by_School_Year.emf", replace
-(file C:\Users\ems541\Documents\human-capital-stata\tables_figures\Retention_by_School_Year.emf written in En
-> hanced Metafile format)
+(file C:\Users\ems541\Documents\OpenSDPems\human-capital-stata\tables_figures\Retention_by_School_Y
+> ear.emf written in Enhanced Metafile format)
 .                                         
 . } 
 
@@ -502,8 +508,10 @@ delimiter now cr
 .                 gen school_poverty_quartile = .
 (947 missing values generated)
 .                 forval year = 2010/2015 {
-  2.                         xtile temp_poverty_quartile = sch_frpl_pct if school_year == `year', nq(4)
-  3.                         replace school_poverty_quartile = temp_poverty_quartile if school_year == `year'
+  2.                         xtile temp_poverty_quartile = sch_frpl_pct if school_year == `year', n
+> q(4)
+  3.                         replace school_poverty_quartile = temp_poverty_quartile if school_year
+>  == `year'
   4.                         drop temp_poverty_quartile
   5.                 }
 (150 real changes made)
@@ -661,7 +669,8 @@ Highest percentage of |     8,293      1,323 |     9,616
   3.                 xi: logit `var' i.school_poverty_quartile, robust
   4.                 forval quartile = 2/4 {
   5.                         replace sig_`var' = abs(_b[_Ischool_po_`quartile'] / ///
->                                 _se[_Ischool_po_`quartile']) if school_poverty_quartile == `quartile'
+>                                 _se[_Ischool_po_`quartile']) if school_poverty_quartile == `quart
+> ile'
   6.                         replace sig_`var' = 0 if sig_`var' <= 1.96 & ///
 >                                 school_poverty_quartile == `quartile'
   7.                         replace sig_`var' = 1 if sig_`var' > 1.96 & ///
@@ -686,9 +695,9 @@ Log pseudolikelihood = -17876.852               Pseudo R2         =     0.0004
               |               Robust
       t_leave |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
 --------------+----------------------------------------------------------------
-_Ischool_po_2 |   .0373853   .0379152     0.99   0.324    -.0369271    .1116978
-_Ischool_po_3 |   .0518057   .0390138     1.33   0.184    -.0246599    .1282714
-_Ischool_po_4 |   .1517937   .0401969     3.78   0.000     .0730093    .2305782
+_Ischool_po_2 |   .0373855   .0379152     0.99   0.324     -.036927    .1116979
+_Ischool_po_3 |   .0518058   .0390138     1.33   0.184    -.0246598    .1282715
+_Ischool_po_4 |   .1517927   .0401969     3.78   0.000     .0730082    .2305772
         _cons |  -1.987304   .0271906   -73.09   0.000    -2.040597   -1.934012
 -------------------------------------------------------------------------------
 (13,134 real changes made)
@@ -812,8 +821,8 @@ delimiter now cr
 .         graph save "$graphs\Retention_by_Poverty_Quartile.gph", replace
 (file .\tables_figures\Retention_by_Poverty_Quartile.gph saved)
 .         graph export "$graphs\Retention_by_Poverty_Quartile.emf", replace
-(file C:\Users\ems541\Documents\human-capital-stata\tables_figures\Retention_by_Poverty_Quartile.emf written 
-> in Enhanced Metafile format)
+(file C:\Users\ems541\Documents\OpenSDPems\human-capital-stata\tables_figures\Retention_by_Poverty_
+> Quartile.emf written in Enhanced Metafile format)
 .         
 . } 
 
@@ -822,7 +831,7 @@ delimiter now cr
 . 
 . if $retention_teacher_effectiveness == 1 {
 . 
-.         // Step 1: Choose the subject (math or ela) and school level (elem or 
+.         // Step 1: Choose the subject (m or e) and school level (elem or
 .         // middle) for the analysis. Note: to make multiple charts at the same time, 
 .         // put loops for subject and level around the analysis and graphing code.
 .         // To include all grade levels in the analysis, comment out the local level 
@@ -840,17 +849,19 @@ delimiter now cr
 .         // added estimates and next-year retention status are available. Keep only 
 .         // records for which one-year teacher effectiveness estimates are available. 
 .         // Keep employees who are teachers. If school level restriction is chosen, 
-.         // keep only records from either elementary or middle schools.
+.         // keep only records from either elementary, middle, or high schools.
 .         
 .         keep if school_year >= 2010 & school_year <= 2014
 (9,642 observations deleted)
 .         keep if !missing(current_tre_`subject')
 (42,101 observations deleted)
+.         keep if !(sch_high == 1)
+(74 observations deleted)
 .         if "`level'" == "elem" {        
-.                 keep if school_lvl == "Elem"
+.                 keep if sch_elem == 1
 .         }
 .         if "`level'" == "middle" {
-.                 keep if school_lvl == "Mid"
+.                 keep if sch_middle == 1
 .         }
 . 
 .         // Step 4: Review variables.
@@ -860,30 +871,30 @@ delimiter now cr
 
 School Year |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-       2010 |        997       19.95       19.95
-       2011 |      1,016       20.33       40.28
-       2012 |        980       19.61       59.88
-       2013 |        966       19.33       79.21
-       2014 |      1,039       20.79      100.00
+       2010 |        987       20.04       20.04
+       2011 |      1,000       20.31       40.35
+       2012 |        965       19.60       59.95
+       2013 |        950       19.29       79.24
+       2014 |      1,022       20.76      100.00
 ------------+-----------------------------------
-      Total |      4,998      100.00
+      Total |      4,924      100.00
 .         //unique tid
 .         codebook current_tre_`subject'
 
--------------------------------------------------------------------------------------------------------------
-current_tre_m                                          Math Single-Year Teacher Effects for Given School Year
--------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+current_tre_m                                Math Single-Year Teacher Effects for Given School Year
+---------------------------------------------------------------------------------------------------
 
                   type:  numeric (double)
 
                  range:  [-.31580487,.37480176]       units:  1.000e-21
-         unique values:  3,158                    missing .:  0/4,998
+         unique values:  3,140                    missing .:  0/4,924
 
-                  mean:   -.00182
-              std. dev:   .092867
+                  mean:   -.00171
+              std. dev:   .093399
 
            percentiles:        10%       25%       50%       75%       90%
-                          -.120375  -.063224  -.007086   .058792   .115828
+                          -.120713  -.064677  -.005572   .059281   .117274
 .         table t_stay, c(freq mean current_tre_`subject')
 
 ------------------------------------------
@@ -893,8 +904,8 @@ School in |
 Following |
 Year      |          Freq.  mean(curren~m)
 ----------+-------------------------------
-        0 |          1,016      -.02148709
-        1 |          3,982       .00319767
+        0 |          1,004      -.02185669
+        1 |          3,920       .00345046
 ------------------------------------------
 .         table t_leave, c(freq mean current_tre_`subject')
 
@@ -909,8 +920,8 @@ in        |
 Following |
 Year      |          Freq.  mean(curren~m)
 ----------+-------------------------------
-        0 |          4,417       .00039187
-        1 |            581      -.01863795
+        0 |          4,352       .00057731
+        1 |            572      -.01910974
 ------------------------------------------
 .         table t_transfer, c(freq mean current_tre_`subject')
 
@@ -922,8 +933,8 @@ School in |
 Following |
 Year      |          Freq.  mean(curren~m)
 ----------+-------------------------------
-        0 |          4,563       .00041737
-        1 |            435      -.02529251
+        0 |          4,492        .0005777
+        1 |            432      -.02549386
 ------------------------------------------
 .         
 .         // Step 5: Calculate effectiveness tercile using restricted sample.
@@ -937,10 +948,10 @@ Teacher in |
  Following |   3 quantiles of current_tre_m
       Year |         1          2          3 |     Total
 -----------+---------------------------------+----------
-         0 |     1,464      1,551      1,548 |     4,563 
-         1 |       202        116        117 |       435 
+         0 |     1,442      1,525      1,525 |     4,492 
+         1 |       200        116        116 |       432 
 -----------+---------------------------------+----------
-     Total |     1,666      1,667      1,665 |     4,998 
+     Total |     1,642      1,641      1,641 |     4,924 
 
 .         tab t_leave terc_current_tre_`subject', mi
 
@@ -953,10 +964,10 @@ Schools in |
  Following |   3 quantiles of current_tre_m
       Year |         1          2          3 |     Total
 -----------+---------------------------------+----------
-         0 |     1,418      1,485      1,514 |     4,417 
-         1 |       248        182        151 |       581 
+         0 |     1,397      1,461      1,494 |     4,352 
+         1 |       245        180        147 |       572 
 -----------+---------------------------------+----------
-     Total |     1,666      1,667      1,665 |     4,998 
+     Total |     1,642      1,641      1,641 |     4,924 
 
 .                                 
 .         // Step 6: Get sample sizes.
@@ -965,16 +976,16 @@ Schools in |
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-         tid |      4,998     1007372    4204.658    1000016    1014799
+         tid |      4,924     1007361    4203.954    1000016    1014799
 .         local teacher_years = string(r(N), "%9.0fc")
 .         preserve
 .                 bysort tid: keep if _n == 1
-(3,004 observations deleted)
+(2,951 observations deleted)
 .                 sum tid
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-         tid |      1,994     1007406    4241.815    1000016    1014799
+         tid |      1,973     1007405     4241.47    1000016    1014799
 .                 local unique_teachers = string(r(N), "%9.0fc")
 .         restore 
 . 
@@ -985,7 +996,8 @@ Schools in |
   3.                 xi: logit `var' i.terc_current_tre_`subject', robust
   4.                 forval quartile = 2/3 {
   5.                         replace sig_`var' = abs(_b[_Iterc_curr_`quartile'] / ///
->                                 _se[_Iterc_curr_`quartile']) if terc_current_tre_`subject' == `quartile'
+>                                 _se[_Iterc_curr_`quartile']) if terc_current_tre_`subject' == `qu
+> artile'
   6.                         replace sig_`var' = 0 if sig_`var' <= 1.96 ///
 >                                 & terc_current_tre_`subject' == `quartile'
   7.                         replace sig_`var' = 1 if sig_`var' > 1.96 ///
@@ -993,63 +1005,63 @@ Schools in |
   8.                 }
   9.                 replace sig_`var' = 0 if terc_current_tre_`subject' == 1
  10.         }               
-(4,998 missing values generated)
+(4,924 missing values generated)
 i.terc_curren~m   _Iterc_curr_1-3     (naturally coded; _Iterc_curr_1 omitted)
 
-Iteration 0:   log pseudolikelihood = -1796.1767  
-Iteration 1:   log pseudolikelihood = -1782.2487  
-Iteration 2:   log pseudolikelihood = -1782.0814  
-Iteration 3:   log pseudolikelihood = -1782.0814  
+Iteration 0:   log pseudolikelihood = -1768.7756  
+Iteration 1:   log pseudolikelihood = -1754.4408  
+Iteration 2:   log pseudolikelihood = -1754.2603  
+Iteration 3:   log pseudolikelihood = -1754.2603  
 
-Logistic regression                             Number of obs     =      4,998
-                                                Wald chi2(2)      =      28.23
+Logistic regression                             Number of obs     =      4,924
+                                                Wald chi2(2)      =      28.98
                                                 Prob > chi2       =     0.0000
-Log pseudolikelihood = -1782.0814               Pseudo R2         =     0.0078
+Log pseudolikelihood = -1754.2603               Pseudo R2         =     0.0082
 
 -------------------------------------------------------------------------------
               |               Robust
       t_leave |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
 --------------+----------------------------------------------------------------
-_Iterc_curr_2 |  -.3555895   .1044393    -3.40   0.001    -.5602867   -.1508922
-_Iterc_curr_3 |  -.5616566    .109649    -5.12   0.000    -.7765647   -.3467486
-        _cons |  -1.743574   .0688362   -25.33   0.000     -1.87849   -1.608657
+_Iterc_curr_2 |  -.3530955     .10507    -3.36   0.001    -.5590289    -.147162
+_Iterc_curr_3 |  -.5779556   .1107791    -5.22   0.000    -.7950787   -.3608326
+        _cons |  -1.740824   .0692707   -25.13   0.000    -1.876592   -1.605056
 -------------------------------------------------------------------------------
-(1,667 real changes made)
+(1,641 real changes made)
 (0 real changes made)
-(1,667 real changes made)
-(1,665 real changes made)
+(1,641 real changes made)
+(1,641 real changes made)
 (0 real changes made)
-(1,665 real changes made)
-(1,666 real changes made)
-(4,998 missing values generated)
+(1,641 real changes made)
+(1,642 real changes made)
+(4,924 missing values generated)
 i.terc_curren~m   _Iterc_curr_1-3     (naturally coded; _Iterc_curr_1 omitted)
 
-Iteration 0:   log pseudolikelihood =  -1477.525  
-Iteration 1:   log pseudolikelihood = -1460.3173  
-Iteration 2:   log pseudolikelihood = -1459.9302  
-Iteration 3:   log pseudolikelihood = -1459.9301  
-Iteration 4:   log pseudolikelihood = -1459.9301  
+Iteration 0:   log pseudolikelihood = -1463.7205  
+Iteration 1:   log pseudolikelihood = -1447.0065  
+Iteration 2:   log pseudolikelihood = -1446.6405  
+Iteration 3:   log pseudolikelihood = -1446.6403  
+Iteration 4:   log pseudolikelihood = -1446.6403  
 
-Logistic regression                             Number of obs     =      4,998
-                                                Wald chi2(2)      =      35.97
+Logistic regression                             Number of obs     =      4,924
+                                                Wald chi2(2)      =      34.92
                                                 Prob > chi2       =     0.0000
-Log pseudolikelihood = -1459.9301               Pseudo R2         =     0.0119
+Log pseudolikelihood = -1446.6403               Pseudo R2         =     0.0117
 
 -------------------------------------------------------------------------------
               |               Robust
    t_transfer |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
 --------------+----------------------------------------------------------------
-_Iterc_curr_2 |  -.6124049   .1220736    -5.02   0.000    -.8516648    -.373145
-_Iterc_curr_3 |   -.601885   .1217765    -4.94   0.000    -.8405627   -.3632074
-        _cons |   -1.98066   .0750645   -26.39   0.000    -2.127784   -1.833536
+_Iterc_curr_2 |  -.6006905    .122364    -4.91   0.000    -.8405195   -.3608614
+_Iterc_curr_3 |  -.6006905    .122364    -4.91   0.000    -.8405195   -.3608614
+        _cons |  -1.975469   .0754628   -26.18   0.000    -2.123373   -1.827565
 -------------------------------------------------------------------------------
-(1,667 real changes made)
+(1,641 real changes made)
 (0 real changes made)
-(1,667 real changes made)
-(1,665 real changes made)
+(1,641 real changes made)
+(1,641 real changes made)
 (0 real changes made)
-(1,665 real changes made)
-(1,666 real changes made)
+(1,641 real changes made)
+(1,642 real changes made)
 .         
 .         // Step 8: Collapse and calculate shares.
 .         
@@ -1095,15 +1107,16 @@ sig_t_transfer was float now str1
 .         
 .         local gradespan "5th through 8th"
 .         
+.         if "`level'" == "elem" {
+.                 local subj_title "Elementary School `subj_title'"
+.                 local gradespan "5th"
+.         }
+.         
 .         if "`level'" == "middle" {
-.                 local level_title "Middle "
+.                 local subj_title "Middle School `subj_title'"
 .                 local gradespan "6th through 8th"
 .         }
 .         
-.         if "`level'" == "elem" {
-.                 local level_title "Elementary "
-.                 local gradespan "5th"
-.         }
 .         
 .         // Step 12: Make chart.
 .         
@@ -1153,8 +1166,10 @@ delimiter now cr
 .         graph save "$graphs\Retention_by_Effectiveness_Tercile_`subj_title'.gph", replace
 (file .\tables_figures\Retention_by_Effectiveness_Tercile_.gph saved)
 .         graph export "$graphs\Retention_by_Effectiveness_Tercile_`subj_title'.emf", replace
-(file C:\Users\ems541\Documents\human-capital-stata\tables_figures\Retention_by_Effectiveness_Tercile_.emf wr
-> itten in Enhanced Metafile format)
+(file C:\Users\ems541\Documents\OpenSDPems\human-capital-stata\tables_figures\Retention_by_Effectiv
+> eness_Tercile_.emf written in Enhanced Metafile format)
+.         graph export "$docs\Teacher_Turnover_by_Teacher_Effectiveness_Tercile.png", replace
+(file .\docs\Teacher_Turnover_by_Teacher_Effectiveness_Tercile.png written in PNG format)
 .         
 . }
 
@@ -1315,7 +1330,8 @@ delimiter now ;
 >                 yscale(range(0(20)100)) 
 >                 ylabel(0(20)100, nogrid format(%9.0f) labsize(medsmall)) 
 >                 xscale(range(2011(.1)2015.1)) 
->                 xlabel(2011 "2011-12" 2012 "2011-12" 2013 "2012-13" 2014 "2013-14" 2015 "2014-15", 
+>                 xlabel(2011 "2011-12" 2012 "2011-12" 2013 "2012-13" 2014 "2013-14" 2015 "2014-15"
+> , 
 >                         labsize(medsmall)) 
 >                 legend(position(8) order(2 1) cols(1) symxsize(3) ring(0) size(medsmall) 
 >                         region(lstyle(none) lcolor(none) color(none))
@@ -1335,17 +1351,15 @@ delimiter now cr
 .         graph save "$graphs\Novice_Teacher_Retention_Trajectory.gph", replace
 (file .\tables_figures\Novice_Teacher_Retention_Trajectory.gph saved)
 .         graph export "$graphs\Novice_Teacher_Retention_Trajectory.emf", replace
-(file C:\Users\ems541\Documents\human-capital-stata\tables_figures\Novice_Teacher_Retention_Trajectory.emf wr
-> itten in Enhanced Metafile format)
-.         graph export "$docs\Novice_Teacher_Retention_Trajectory.png", replace
-(file .\docs\Novice_Teacher_Retention_Trajectory.png written in PNG format)
+(file C:\Users\ems541\Documents\OpenSDPems\human-capital-stata\tables_figures\Novice_Teacher_Retent
+> ion_Trajectory.emf written in Enhanced Metafile format)
 .         
 . } 
 
 . 
 . log close
       name:  <unnamed>
-       log:  C:\Users\ems541\Documents\human-capital-stata\logs\Analyze_Retention.txt
+       log:  C:\Users\ems541\Documents\OpenSDPems\human-capital-stata\logs\Analyze_Retention.txt
   log type:  text
- closed on:   8 Mar 2018, 15:52:06
--------------------------------------------------------------------------------------------------------------
+ closed on:  29 Mar 2018, 09:38:53
+---------------------------------------------------------------------------------------------------

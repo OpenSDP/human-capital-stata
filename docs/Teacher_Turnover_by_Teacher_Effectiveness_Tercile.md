@@ -23,7 +23,7 @@ output:
 </div>
 </div>
 
-[OpenSDP Home](http://opensdp.github.io) / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Compare Teacher Turnover Rates Across Teacher Effectiveness Terciles
+[OpenSDP Analysis](http://opensdp.github.io/analysis) / [Human Capital Analysis: Retention](Human_Capital_Analysis_Retention.html) / Compare Teacher Turnover Rates Across Teacher Effectiveness Terciles
 
 ![](Teacher_Turnover_by_Teacher_Effectiveness_Tercile.png)
 

@@ -159,7 +159,7 @@ drop balanced
 unique tid
 ```
 
-####Step 8: Assign teacher quartils. 
+####Step 8: Assign teacher quartiles. 
 
 Assign teachers to quartiles based on two-year pooled teacher effects in year 2, and generate dummy variables for quartiles.
 

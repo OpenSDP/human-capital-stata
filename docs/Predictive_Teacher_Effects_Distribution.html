@@ -305,8 +305,8 @@ keep if balanced == 1
 drop balanced
 unique tid</code></pre>
 </div>
-<div id="step-8-assign-teacher-quartils." class="section level4">
-<h4>Step 8: Assign teacher quartils.</h4>
+<div id="step-8-assign-teacher-quartiles." class="section level4">
+<h4>Step 8: Assign teacher quartiles.</h4>
 <p>Assign teachers to quartiles based on two-year pooled teacher effects in year 2, and generate dummy variables for quartiles.</p>
 <pre class="stata"><code>assert !missing(curr2year_tre_`subject') if year2 == 1
 xtile quart_temp = curr2year_tre_`subject' if year2 == 1, nq(4)

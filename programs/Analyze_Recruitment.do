@@ -31,7 +31,7 @@
 	// Edit the file path below to point to the directory with folders for data, logs,
 	// programs, and tables and figures. Change to that directory.
 	
-	cd "C:\working_files\human-capital-stata"
+	cd "C:\working_files"
 
 	// Define file locations
 	

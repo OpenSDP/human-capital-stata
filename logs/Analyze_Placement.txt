@@ -1,0 +1,1257 @@
+-----------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\emily\Documents\human-capital-stata\logs\Analyze_Placement.txt
+  log type:  text
+ opened on:  10 May 2018, 15:35:08
+
+. 
+.         // Set program switches for placement analyses. Set switch to 0 to skip the 
+.         // section of code that runs a given analysis, and to 1 to run the analysis.
+.         
+.         global teacher_char_by_school_poverty   = 1
+
+.         global student_prior_ach_by_tchr_exp    = 1
+
+. 
+. /*** 1. Teacher Characteristics by School Poverty ***/ 
+. 
+. if ${teacher_char_by_school_poverty} == 1 { 
+.         
+.         // Step 1: Load the Teacher_Year_Analysis data file. 
+.         
+.         use "${analysis}\Teacher_Year_Analysis.dta", clear
+.         isid tid school_year
+. 
+.         // Step 2: Restrict the sample.
+.         
+.         keep if t_is_teacher == 1 
+(88 observations deleted)
+.         keep if !missing(school_poverty_quartile)
+(35 observations deleted)
+.                 
+.         // Step 3: Review variables.
+.         
+.         tab school_year school_poverty_quartile, mi row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+    Spring |
+    School |           school_poverty_quartile
+      Year | Lowest pe  Second-lo  Second-hi  Highest p |     Total
+-----------+--------------------------------------------+----------
+      2007 |       620        435        506        418 |     1,979 
+           |     31.33      21.98      25.57      21.12 |    100.00 
+-----------+--------------------------------------------+----------
+      2008 |       630        441        623        297 |     1,991 
+           |     31.64      22.15      31.29      14.92 |    100.00 
+-----------+--------------------------------------------+----------
+      2009 |       667        338        601        314 |     1,920 
+           |     34.74      17.60      31.30      16.35 |    100.00 
+-----------+--------------------------------------------+----------
+      2010 |       584        411        519        415 |     1,929 
+           |     30.27      21.31      26.91      21.51 |    100.00 
+-----------+--------------------------------------------+----------
+      2011 |       597        364        513        358 |     1,832 
+           |     32.59      19.87      28.00      19.54 |    100.00 
+-----------+--------------------------------------------+----------
+     Total |     3,098      1,989      2,762      1,802 |     9,651 
+           |     32.10      20.61      28.62      18.67 |    100.00 
+
+.         bysort school_code school_year: gen tag = _n == 1
+.         tab school_year school_poverty_quartile if tag, mi
+
+    Spring |
+    School |           school_poverty_quartile
+      Year | Lowest pe  Second-lo  Second-hi  Highest p |     Total
+-----------+--------------------------------------------+----------
+      2007 |        21         21         21         21 |        84 
+      2008 |        22         21         22         21 |        86 
+      2009 |        22         21         22         21 |        86 
+      2010 |        22         22         22         22 |        88 
+      2011 |        22         22         22         21 |        87 
+-----------+--------------------------------------------+----------
+     Total |       109        107        109        106 |       431 
+
+.         drop tag
+.         foreach var of varlist t_male t_black t_latino t_white t_newhire ///
+>                 t_adv_degree t_certification_pathway {
+  2.                 tab school_poverty_quartile `var', mi row
+  3.         }
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+school_poverty_quarti |              t_male
+                   le |    Female       Male          . |     Total
+----------------------+---------------------------------+----------
+Lowest percentage of  |     1,556      1,541          1 |     3,098 
+                      |     50.23      49.74       0.03 |    100.00 
+----------------------+---------------------------------+----------
+Second-lowest percent |     1,011        978          0 |     1,989 
+                      |     50.83      49.17       0.00 |    100.00 
+----------------------+---------------------------------+----------
+Second-highest percen |     1,336      1,425          1 |     2,762 
+                      |     48.37      51.59       0.04 |    100.00 
+----------------------+---------------------------------+----------
+Highest percentage of |       876        926          0 |     1,802 
+                      |     48.61      51.39       0.00 |    100.00 
+----------------------+---------------------------------+----------
+                Total |     4,779      4,870          2 |     9,651 
+                      |     49.52      50.46       0.02 |    100.00 
+
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+school_poverty_quarti |        t_black
+                   le |         0          1 |     Total
+----------------------+----------------------+----------
+Lowest percentage of  |     2,834        264 |     3,098 
+                      |     91.48       8.52 |    100.00 
+----------------------+----------------------+----------
+Second-lowest percent |     1,765        224 |     1,989 
+                      |     88.74      11.26 |    100.00 
+----------------------+----------------------+----------
+Second-highest percen |     2,363        399 |     2,762 
+                      |     85.55      14.45 |    100.00 
+----------------------+----------------------+----------
+Highest percentage of |     1,448        354 |     1,802 
+                      |     80.36      19.64 |    100.00 
+----------------------+----------------------+----------
+                Total |     8,410      1,241 |     9,651 
+                      |     87.14      12.86 |    100.00 
+
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+school_poverty_quarti |       t_latino
+                   le |         0          1 |     Total
+----------------------+----------------------+----------
+Lowest percentage of  |     2,773        325 |     3,098 
+                      |     89.51      10.49 |    100.00 
+----------------------+----------------------+----------
+Second-lowest percent |     1,682        307 |     1,989 
+                      |     84.57      15.43 |    100.00 
+----------------------+----------------------+----------
+Second-highest percen |     2,201        561 |     2,762 
+                      |     79.69      20.31 |    100.00 
+----------------------+----------------------+----------
+Highest percentage of |     1,308        494 |     1,802 
+                      |     72.59      27.41 |    100.00 
+----------------------+----------------------+----------
+                Total |     7,964      1,687 |     9,651 
+                      |     82.52      17.48 |    100.00 
+
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+school_poverty_quarti |        t_white
+                   le |         0          1 |     Total
+----------------------+----------------------+----------
+Lowest percentage of  |     1,062      2,036 |     3,098 
+                      |     34.28      65.72 |    100.00 
+----------------------+----------------------+----------
+Second-lowest percent |       837      1,152 |     1,989 
+                      |     42.08      57.92 |    100.00 
+----------------------+----------------------+----------
+Second-highest percen |     1,282      1,480 |     2,762 
+                      |     46.42      53.58 |    100.00 
+----------------------+----------------------+----------
+Highest percentage of |     1,095        707 |     1,802 
+                      |     60.77      39.23 |    100.00 
+----------------------+----------------------+----------
+                Total |     4,276      5,375 |     9,651 
+                      |     44.31      55.69 |    100.00 
+
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+school_poverty_quarti |            t_newhire
+                   le |         0          1          . |     Total
+----------------------+---------------------------------+----------
+Lowest percentage of  |     1,920        558        620 |     3,098 
+                      |     61.98      18.01      20.01 |    100.00 
+----------------------+---------------------------------+----------
+Second-lowest percent |     1,151        403        435 |     1,989 
+                      |     57.87      20.26      21.87 |    100.00 
+----------------------+---------------------------------+----------
+Second-highest percen |     1,591        665        506 |     2,762 
+                      |     57.60      24.08      18.32 |    100.00 
+----------------------+---------------------------------+----------
+Highest percentage of |       886        498        418 |     1,802 
+                      |     49.17      27.64      23.20 |    100.00 
+----------------------+---------------------------------+----------
+                Total |     5,548      2,124      1,979 |     9,651 
+                      |     57.49      22.01      20.51 |    100.00 
+
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+school_poverty_quarti |           t_adv_degree
+                   le |         0          1          . |     Total
+----------------------+---------------------------------+----------
+Lowest percentage of  |     1,566      1,532          0 |     3,098 
+                      |     50.55      49.45       0.00 |    100.00 
+----------------------+---------------------------------+----------
+Second-lowest percent |     1,072        915          2 |     1,989 
+                      |     53.90      46.00       0.10 |    100.00 
+----------------------+---------------------------------+----------
+Second-highest percen |     1,574      1,186          2 |     2,762 
+                      |     56.99      42.94       0.07 |    100.00 
+----------------------+---------------------------------+----------
+Highest percentage of |     1,117        685          0 |     1,802 
+                      |     61.99      38.01       0.00 |    100.00 
+----------------------+---------------------------------+----------
+                Total |     5,329      4,318          4 |     9,651 
+                      |     55.22      44.74       0.04 |    100.00 
+
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+school_poverty_quarti |     t_certification_pathway
+                   le | Standard   Alternati        TFA |     Total
+----------------------+---------------------------------+----------
+Lowest percentage of  |     2,425        663         10 |     3,098 
+                      |     78.28      21.40       0.32 |    100.00 
+----------------------+---------------------------------+----------
+Second-lowest percent |     1,593        386         10 |     1,989 
+                      |     80.09      19.41       0.50 |    100.00 
+----------------------+---------------------------------+----------
+Second-highest percen |     2,232        517         13 |     2,762 
+                      |     80.81      18.72       0.47 |    100.00 
+----------------------+---------------------------------+----------
+Highest percentage of |     1,485        309          8 |     1,802 
+                      |     82.41      17.15       0.44 |    100.00 
+----------------------+---------------------------------+----------
+                Total |     7,735      1,875         41 |     9,651 
+                      |     80.15      19.43       0.42 |    100.00 
+
+.         table school_poverty_quartile, c(mean t_experience)
+
+---------------------------------------------------------
+                 school_poverty_quartile | mean(t_expe~e)
+-----------------------------------------+---------------
+Lowest percentage of FRPL-eligible stude |       13.68467
+Second-lowest percentage of FRPL-eligibl |      13.583795
+Second-highest percentage of FRPL-eligib |      10.900689
+Highest percentage of FRPL-eligible stud |      11.096559
+---------------------------------------------------------
+.         
+.         // Step 4: Create binary variables for each school poverty quartile.
+.         
+.         tab school_poverty_quartile, gen(school_poverty_q)
+
+                school_poverty_quartile |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+Lowest percentage of FRPL-eligible stud |      3,098       32.10       32.10
+Second-lowest percentage of FRPL-eligib |      1,989       20.61       52.71
+Second-highest percentage of FRPL-eligi |      2,762       28.62       81.33
+Highest percentage of FRPL-eligible stu |      1,802       18.67      100.00
+----------------------------------------+-----------------------------------
+                                  Total |      9,651      100.00
+.         
+.         // Step 5: Create a binary variable for alternative certification. 
+.         
+.         gen t_alternative_certification = (t_certification_pathway > 1 & ///
+>                 t_certification_pathway != .) 
+.         tab t_alternative_certification t_certification_pathway, mi     
+
+t_alternat |
+ive_certif |     t_certification_pathway
+   ication | Standard   Alternati        TFA |     Total
+-----------+---------------------------------+----------
+         0 |     7,735          0          0 |     7,735 
+         1 |         0      1,875         41 |     1,916 
+-----------+---------------------------------+----------
+     Total |     7,735      1,875         41 |     9,651 
+
+. 
+.         // Step 6: Get overall sample size.
+.         
+.         summ tid
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         tid |      9,651    4780.102    2759.533          1       9598
+.         local teacher_years = string(r(N), "%9.0fc")
+.         preserve 
+.                 bysort tid: keep if _n == 1
+(5,535 observations deleted)
+.                 summ tid
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         tid |      4,116    4783.767    2766.121          1       9598
+.                 local unique_teachers = string(r(N), "%9.0fc")
+.         restore
+. 
+.         // Step 7: Define row titles for the table.
+.         
+.         local t_male "Percent Male"
+.         local t_black "Percent African American"
+.         local t_latino "Percent Latino"
+.         local t_white "Percent White"
+.         local t_newhire "Percent New Hires"
+.         local t_adv_degree "Percent with Advanced Degree"
+.         local t_alternative_certification "Percent with Alternative Certification"
+.         local t_experience "Average Teacher Experience"
+.         
+.         // Step 8: Open output file.
+. 
+.         putexcel set ${graphs}\Teacher_Char_by_School_Poverty.xlsx, sheet(Sheet1) replace
+Note: file will be replaced when the first putexcel command is issued
+.                 
+.         // Step 9: Create local row number variable.
+.         
+.         local rownum = 1
+.         
+.         // Step 10: Write overall and column titles in appropriate cells.
+.         
+.         putexcel A`rownum':F`rownum' = "Teacher Characteristics by School Poverty Level", merge hcenter vcenter
+>  bold font(calibri, 20, black)
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+.         local rownum = `rownum' + 1
+.         putexcel B`rownum' = "Agency Average", bold txtwrap hcenter
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+.         putexcel C`rownum' = "High Poverty Schools", bold txtwrap hcenter
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+.         putexcel D`rownum' = "Low Poverty Schools", bold txtwrap hcenter
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+.         putexcel E`rownum' = "Difference between High and Low Poverty Schools", bold txtwrap hcenter
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+.         
+.         // Step 11: Start a loop through row variables, incrementing rownum.
+.         
+.         foreach rowvar of varlist t_male t_black t_latino t_white t_newhire ///
+>                 t_adv_degree t_alternative_certification t_experience {
+  2.                 
+.                 local rownum = `rownum' + 1             
+  3. 
+.                 // Step 12: Calculate quartile averages and difference.
+.                 
+.                 reg `rowvar' school_poverty_q4 school_poverty_q1, robust
+  4.                 estimates store `rowvar'
+  5.                 local highpov = _b[school_poverty_q4] + _b[_cons]
+  6.                 local lowpov = _b[school_poverty_q1] + _b[_cons]
+  7.                 local diff = _b[school_poverty_q4] - _b[school_poverty_q1]
+  8.                 
+.                 // Step 13: Get significance for difference between top and bottom quartile.
+.                 
+.                 test school_poverty_q4 = school_poverty_q1
+  9.                 gen star = ""
+ 10.                 replace star = "*" if r(p) < .05
+ 11.                 
+.                 // Step 14: Caclulate agency average.
+.                 
+.                 quietly summ `rowvar', meanonly
+ 12.                 local agencyavg = r(mean)
+ 13. 
+.                 // Step 15: Write values for high, low, difference, and significance for each 
+.                 //row variable.
+.                 
+.                 putexcel A`rownum' = "``rowvar''", bold
+ 14.                 putexcel B`rownum' = `agencyavg'*100, nformat("###.#") 
+ 15.                 putexcel C`rownum' = `highpov'*100, nformat("###.#")
+ 16.                 putexcel D`rownum' = `lowpov'*100, nformat("###.#")
+ 17.                 putexcel E`rownum' = `diff'*100, nformat("###.#")
+ 18.                 putexcel F`rownum' = "`:di %3s star'"
+ 19.                 drop star 
+ 20.                 
+.         }
+
+Linear regression                               Number of obs     =      9,649
+                                                F(2, 9646)        =       0.63
+                                                Prob > F          =     0.5321
+                                                R-squared         =     0.0001
+                                                Root MSE          =     .50002
+
+-----------------------------------------------------------------------------------
+                  |               Robust
+           t_male |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+school_poverty_q4 |   .0079787   .0138315     0.58   0.564     -.019134    .0350915
+school_poverty_q1 |  -.0083164   .0115493    -0.72   0.471    -.0309556    .0143227
+            _cons |   .5058947   .0072554    69.73   0.000     .4916727    .5201168
+-----------------------------------------------------------------------------------
+
+ ( 1)  school_poverty_q4 - school_poverty_q1 = 0
+
+       F(  1,  9646) =    1.21
+            Prob > F =    0.2713
+(9,651 missing values generated)
+(0 real changes made)
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+
+Linear regression                               Number of obs     =      9,651
+                                                F(2, 9648)        =      59.95
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0131
+                                                Root MSE          =      .3326
+
+-----------------------------------------------------------------------------------
+                  |               Robust
+          t_black |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+school_poverty_q4 |   .0653181   .0105649     6.18   0.000     .0446087    .0860275
+school_poverty_q1 |   -.045914   .0070114    -6.55   0.000    -.0596578   -.0321702
+            _cons |   .1311303   .0048978    26.77   0.000     .1215295    .1407311
+-----------------------------------------------------------------------------------
+
+ ( 1)  school_poverty_q4 - school_poverty_q1 = 0
+
+       F(  1,  9648) =  109.69
+            Prob > F =    0.0000
+(9,651 missing values generated)
+(9,651 real changes made)
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+
+Linear regression                               Number of obs     =      9,651
+                                                F(2, 9648)        =     117.19
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0239
+                                                Root MSE          =      .3753
+
+-----------------------------------------------------------------------------------
+                  |               Robust
+         t_latino |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+school_poverty_q4 |   .0914415   .0119121     7.68   0.000     .0680912    .1147918
+school_poverty_q1 |   -.077792   .0078587    -9.90   0.000    -.0931966   -.0623874
+            _cons |   .1826984    .005607    32.58   0.000     .1717074    .1936894
+-----------------------------------------------------------------------------------
+
+ ( 1)  school_poverty_q4 - school_poverty_q1 = 0
+
+       F(  1,  9648) =  203.44
+            Prob > F =    0.0000
+(9,651 missing values generated)
+(9,651 real changes made)
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+
+Linear regression                               Number of obs     =      9,651
+                                                F(2, 9648)        =     171.46
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0336
+                                                Root MSE          =     .48841
+
+-----------------------------------------------------------------------------------
+                  |               Robust
+          t_white |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+school_poverty_q4 |  -.1616468   .0135782   -11.90   0.000    -.1882629   -.1350307
+school_poverty_q1 |   .1032096   .0111699     9.24   0.000     .0813142    .1251049
+            _cons |   .5539886   .0072127    76.81   0.000     .5398502    .5681271
+-----------------------------------------------------------------------------------
+
+ ( 1)  school_poverty_q4 - school_poverty_q1 = 0
+
+       F(  1,  9648) =  342.04
+            Prob > F =    0.0000
+(9,651 missing values generated)
+(9,651 real changes made)
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+
+Linear regression                               Number of obs     =      7,672
+                                                F(2, 7669)        =      39.37
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0105
+                                                Root MSE          =     .44516
+
+-----------------------------------------------------------------------------------
+                  |               Robust
+        t_newhire |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+school_poverty_q4 |   .0795116   .0148147     5.37   0.000     .0504708    .1085524
+school_poverty_q1 |  -.0551334   .0111089    -4.96   0.000    -.0769098   -.0333569
+            _cons |    .280315   .0072781    38.51   0.000     .2660479     .294582
+-----------------------------------------------------------------------------------
+
+ ( 1)  school_poverty_q4 - school_poverty_q1 = 0
+
+       F(  1,  7669) =   76.51
+            Prob > F =    0.0000
+(9,651 missing values generated)
+(9,651 real changes made)
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+
+Linear regression                               Number of obs     =      9,647
+                                                F(2, 9644)        =      31.26
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0063
+                                                Root MSE          =     .49574
+
+-----------------------------------------------------------------------------------
+                  |               Robust
+     t_adv_degree |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+school_poverty_q4 |  -.0624621   .0135199    -4.62   0.000    -.0889641   -.0359602
+school_poverty_q1 |   .0519173   .0115195     4.51   0.000     .0293366     .074498
+            _cons |   .4425953   .0072102    61.38   0.000     .4284618    .4567288
+-----------------------------------------------------------------------------------
+
+ ( 1)  school_poverty_q4 - school_poverty_q1 = 0
+
+       F(  1,  9644) =   61.85
+            Prob > F =    0.0000
+(9,651 missing values generated)
+(9,651 real changes made)
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+
+Linear regression                               Number of obs     =      9,651
+                                                F(2, 9648)        =       6.54
+                                                Prob > F          =     0.0014
+                                                R-squared         =     0.0013
+                                                Root MSE          =     .39869
+
+-----------------------------------------------------------------------------------
+                  |               Robust
+t_alternative_c~n |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+school_poverty_q4 |  -.0189907   .0106542    -1.78   0.075    -.0398752    .0018939
+school_poverty_q1 |   .0223306   .0093779     2.38   0.017      .003948    .0407132
+            _cons |   .1949063   .0057479    33.91   0.000     .1836392    .2061735
+-----------------------------------------------------------------------------------
+
+ ( 1)  school_poverty_q4 - school_poverty_q1 = 0
+
+       F(  1,  9648) =   12.61
+            Prob > F =    0.0004
+(9,651 missing values generated)
+(9,651 real changes made)
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+
+Linear regression                               Number of obs     =      9,640
+                                                F(2, 9637)        =      56.03
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0116
+                                                Root MSE          =     8.8344
+
+-----------------------------------------------------------------------------------
+                  |               Robust
+     t_experience |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+school_poverty_q4 |  -.9274608   .2354889    -3.94   0.000    -1.389069   -.4658531
+school_poverty_q1 |    1.66065   .2082947     7.97   0.000     1.252348    2.068951
+            _cons |   12.02402   .1273134    94.44   0.000     11.77446    12.27358
+-----------------------------------------------------------------------------------
+
+ ( 1)  school_poverty_q4 - school_poverty_q1 = 0
+
+       F(  1,  9637) =  100.84
+            Prob > F =    0.0000
+(9,651 missing values generated)
+(9,651 real changes made)
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+.         
+.         // Step 16: Write footnote including sample sizes.
+.         
+.         #delimit ;
+delimiter now ;
+.         putexcel A`rownum':F`rownum' = "*Difference is statistically significant at the 95 percent
+> confidence level.", nobold merge;
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+.         local rownum = `rownum' + 1;
+.         putexcel A`rownum':F`rownum' = "Notes: Sample includes teachers in the 2006-07 through 2010-11 
+> school years, with `teacher_years' teacher years and `unique_teachers' unique teachers. 
+> High (low) poverty schools are in the top (bottom) quartile of schools each year based 
+> on the share of students receiving free or reduced price lunch.", merge txtwrap;
+file .\tables_figures\Teacher_Char_by_School_Poverty.xlsx saved
+.         #delimit cr
+delimiter now cr
+.         
+.         // Step 17: Format column widths and heights to fit text.
+.         
+.         mata
+------------------------------------------------- mata (type end to exit) ---------------------------------------
+:         b = xl()
+
+:         b.load_book("${graphs}\Teacher_Char_by_School_Poverty.xlsx")
+
+:         b.set_sheet("Sheet1")
+
+:         b.set_column_width(1,1,33) //make title column widest
+
+:         b.set_column_width(2,7,15) //make each column fit title
+
+:         b.set_column_width(5,5,18) //make difference column wider to fit title
+
+:         b.set_row_height(1,1,55) //make title row bigger
+
+:         b.set_row_height(11,11,70)
+
+:         
+:         
+:         // Step 18: Close file.
+:         
+:         b.close_book()
+
+:         end
+-----------------------------------------------------------------------------------------------------------------
+.         
+.         // If desired, manually save file as png in excel.
+.         
+. }
+
+. 
+. /*** 2. Student Prior Achievement by Teacher Experience ***/
+. 
+. if ${student_prior_ach_by_tchr_exp} == 1 { 
+.         
+.         // Step 1: Choose the subject (math or ela) and school level (elem or 
+.         // middle) for the analysis. Note: to make multiple charts at the same time, 
+.         // put loops for subject and level around the analysis and graphing code.
+.         // To include all grade levels in the analysis, comment out the local level 
+.         // command below.
+.         
+.         local subject math
+.         local level middle
+.         
+.         // Step 2: Load the Student_Teacher_Year_Analysis data file. 
+.         
+.         use "${analysis}\Student_Teacher_Year_Analysis.dta", clear
+.         isid sid school_year
+. 
+.         // Step 3: Restrict the sample. Keep grades and years for which prior-year test scores
+.         // are available. Keep students with teachers with non-missing values for experience. 
+.         // Keep students with a single identified current-year core course and prior-year test 
+.         // score in the given subject. If school level restriction is chosen, keep only 
+.         // records from either elementary or middle school grades.
+.         
+.         keep if school_year >= 2008 & school_year <= 2011
+(21,982 observations deleted)
+.         keep if grade_level >= 5 & grade_level <= 8
+(21,289 observations deleted)
+.         keep if t_is_teacher == 1
+(14,842 observations deleted)
+.         keep if !missing(t_experience)
+(0 observations deleted)
+.         keep if !missing(cid_`subject')
+(0 observations deleted)
+.         keep if !missing(std_scaled_score_`subject'_tm1)
+(15,855 observations deleted)
+.         if "`level'" == "elem" {        
+.                 keep if grade_level == 5
+.         }
+.         if "`level'" == "middle" {
+.                 keep if grade_level >= 6 & grade_level <= 8
+(10,593 observations deleted)
+.         }
+.         
+.         // Step 4: Review teacher and student variables.
+.         
+.         tab school_year grade_level, mi
+
+    Spring |
+    School |       Student Grade Level
+      Year |         6          7          8 |     Total
+-----------+---------------------------------+----------
+      2008 |     1,715      2,455      2,510 |     6,680 
+      2009 |     1,746      2,522      2,450 |     6,718 
+      2010 |     1,681      2,289      2,404 |     6,374 
+      2011 |     1,938      2,774      2,772 |     7,484 
+-----------+---------------------------------+----------
+     Total |     7,080     10,040     10,136 |    27,256 
+
+.         unique tid_`subject'
+Number of unique values of tid_math is  369
+Number of records is  27256
+.         unique tid_`subject' school_year
+Number of unique values of tid_math school_year is  782
+Number of records is  27256
+.         bysort tid_`subject' school_year: gen tag = (_n == 1)
+.         tab t_experience if tag == 1, mi
+
+t_experienc |
+          e |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |         49        6.27        6.27
+          2 |         55        7.03       13.30
+          3 |         47        6.01       19.31
+          4 |         40        5.12       24.42
+          5 |         43        5.50       29.92
+          6 |         40        5.12       35.04
+          7 |         34        4.35       39.39
+          8 |         35        4.48       43.86
+          9 |         34        4.35       48.21
+         10 |         36        4.60       52.81
+         11 |         32        4.09       56.91
+         12 |         35        4.48       61.38
+         13 |         33        4.22       65.60
+         14 |         26        3.32       68.93
+         15 |         22        2.81       71.74
+         16 |         22        2.81       74.55
+         17 |         26        3.32       77.88
+         18 |         19        2.43       80.31
+         19 |         20        2.56       82.86
+         20 |         18        2.30       85.17
+         21 |         14        1.79       86.96
+         22 |         15        1.92       88.87
+         23 |         11        1.41       90.28
+         24 |         11        1.41       91.69
+         25 |          8        1.02       92.71
+         26 |         10        1.28       93.99
+         27 |          8        1.02       95.01
+         28 |          7        0.90       95.91
+         29 |          5        0.64       96.55
+         30 |          2        0.26       96.80
+         31 |          4        0.51       97.31
+         32 |          2        0.26       97.57
+         33 |          2        0.26       97.83
+         34 |          3        0.38       98.21
+         35 |          1        0.13       98.34
+         36 |          1        0.13       98.47
+         37 |          3        0.38       98.85
+         38 |          2        0.26       99.10
+         39 |          1        0.13       99.23
+         40 |          2        0.26       99.49
+         41 |          2        0.26       99.74
+         42 |          1        0.13       99.87
+         43 |          1        0.13      100.00
+------------+-----------------------------------
+      Total |        782      100.00
+.         drop tag
+.         table t_experience, c(mean std_scaled_score_`subject'_tm1)
+
+--------------------------
+t_experie |
+nce       | mean(std_sc~1)
+----------+---------------
+        1 |      -.1648525
+        2 |      -.1373095
+        3 |      -.0046427
+        4 |       .0441592
+        5 |       .1197021
+        6 |      -.0212724
+        7 |       .0064655
+        8 |       .1852706
+        9 |       .0104582
+       10 |      -.1430486
+       11 |       .0793183
+       12 |       .0511478
+       13 |       .1731323
+       14 |       .2122445
+       15 |       .1577343
+       16 |       .0819311
+       17 |       .0773425
+       18 |       .1641506
+       19 |       .3838769
+       20 |       .5975402
+       21 |       .8346667
+       22 |       .3867316
+       23 |       .8894681
+       24 |       .4113138
+       25 |       .3104065
+       26 |       .4989829
+       27 |        .409854
+       28 |       .6344111
+       29 |       .5689286
+       30 |      -1.725891
+       31 |       .0327013
+       32 |       .1289403
+       33 |       .9050607
+       34 |        .361263
+       35 |       .0622065
+       36 |      -.1524272
+       37 |       .5348523
+       38 |        .491864
+       39 |      -.0831288
+       40 |      -.0701124
+       41 |       .3340482
+       42 |      -1.493888
+       43 |      -.0088898
+--------------------------
+.         codebook cid_`subject' tid_`subject' school_year t_experience ///
+>                 std_scaled_score_`subject' std_scaled_score_`subject'_tm1 ///
+>                 grade_level school_code 
+
+-----------------------------------------------------------------------------------------------------------------
+cid_math                                                                                              (unlabeled)
+-----------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [2464,15968]                 units:  1
+         unique values:  2,444                    missing .:  0/27,256
+
+                  mean:   9754.21
+              std. dev:   3359.43
+
+           percentiles:        10%       25%       50%       75%       90%
+                              5167      6929    9559.5     12817     14632
+
+-----------------------------------------------------------------------------------------------------------------
+tid_math                                                                                              (unlabeled)
+-----------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [1,9494]                     units:  1
+         unique values:  369                      missing .:  0/27,256
+
+                  mean:   4600.75
+              std. dev:    2624.5
+
+           percentiles:        10%       25%       50%       75%       90%
+                              1248      2345      4321      6926      8317
+
+-----------------------------------------------------------------------------------------------------------------
+school_year                                                                                    Spring School Year
+-----------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [2008,2011]                  units:  1
+         unique values:  4                        missing .:  0/27,256
+
+            tabulation:  Freq.  Value
+                         6,680  2008
+                         6,718  2009
+                         6,374  2010
+                         7,484  2011
+
+-----------------------------------------------------------------------------------------------------------------
+t_experience                                                                                          (unlabeled)
+-----------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (double)
+
+                 range:  [1,43]                       units:  1
+         unique values:  43                       missing .:  0/27,256
+
+                  mean:   12.1462
+              std. dev:   8.53262
+
+           percentiles:        10%       25%       50%       75%       90%
+                                 2         5        11        18        24
+
+-----------------------------------------------------------------------------------------------------------------
+std_scaled_score_math                                                           _math scaled_score (standardized)
+-----------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [-17.612259,4.4723344]       units:  1.000e-10
+         unique values:  1,562                    missing .:  22/27,256
+
+                  mean:   .154981
+              std. dev:   .967173
+
+           percentiles:        10%       25%       50%       75%       90%
+                          -1.03765  -.521988   .112726   .787452   1.38881
+
+-----------------------------------------------------------------------------------------------------------------
+std_scaled_score_math_tm1                                                                             (unlabeled)
+-----------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [-18.001884,6.0554886]       units:  1.000e-10
+         unique values:  1,602                    missing .:  0/27,256
+
+                  mean:   .148278
+              std. dev:   .971157
+
+           percentiles:        10%       25%       50%       75%       90%
+                          -1.05224  -.540375    .10797   .800553   1.42025
+
+-----------------------------------------------------------------------------------------------------------------
+grade_level                                                                                   Student Grade Level
+-----------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [6,8]                        units:  1
+         unique values:  3                        missing .:  0/27,256
+
+            tabulation:  Freq.  Value
+                         7,080  6
+                        10,040  7
+                        10,136  8
+
+-----------------------------------------------------------------------------------------------------------------
+school_code                                                                                           School Code
+-----------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (double)
+
+                 range:  [231,492]                    units:  1
+         unique values:  28                       missing .:  0/27,256
+
+                  mean:   446.225
+              std. dev:   28.1947
+
+           percentiles:        10%       25%       50%       75%       90%
+                               413       420       440       475       485
+.         
+.         // Step 5: Define dummy variables for teaching experience. Put teachers
+.         // with six or more years of experience into one category.
+.         
+.         replace t_experience = 6 if t_experience > 5 & !missing(t_experience)
+(18,485 real changes made)
+.         tab t_experience, gen(exp)
+
+t_experienc |
+          e |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      1,415        5.19        5.19
+          2 |      1,750        6.42       11.61
+          3 |      1,498        5.50       17.11
+          4 |      1,301        4.77       21.88
+          5 |      1,482        5.44       27.32
+          6 |     19,810       72.68      100.00
+------------+-----------------------------------
+      Total |     27,256      100.00
+.         
+.         // Step 6: Define grade-by-year variable for fixed effects.     
+.         
+.         egen grade_year = group(grade_level school_year)
+.         
+.         // Step 7: Define grade-by-year-by-school variable for fixed effects.
+.         
+.         egen grade_year_school = group(school_code grade_level school_year)
+.         
+.         // Step 8: Define 5 x 4 matrix to store results.
+.         
+.         matrix results = J(5, 4, .)
+.         matrix colnames results = across_school_coef across_school_se ///
+>                 within_school_coef within_school_se
+. 
+.         // Step 9: Do regression of prior student math score on teacher experience. 
+.         // Sixth plus year teachers are comparison group.
+.         
+.         areg std_scaled_score_`subject'_tm1 exp1-exp5, robust cluster(cid_`subject') ///
+>                 absorb(grade_year)
+
+Linear regression, absorbing indicators         Number of obs     =     27,256
+                                                F(   5,   2443)   =      19.48
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0171
+                                                Adj R-squared     =     0.0165
+                                                Root MSE          =     0.9631
+
+                           (Std. Err. adjusted for 2,444 clusters in cid_math)
+------------------------------------------------------------------------------
+             |               Robust
+std_sc~h_tm1 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        exp1 |   -.378915    .052619    -7.20   0.000    -.4820974   -.2757326
+        exp2 |  -.3565237   .0495754    -7.19   0.000    -.4537379   -.2593095
+        exp3 |  -.2250811   .0619479    -3.63   0.000    -.3465571   -.1036052
+        exp4 |   -.174466   .0578755    -3.01   0.003    -.2879561   -.0609759
+        exp5 |  -.0961014   .0603885    -1.59   0.112    -.2145193    .0223165
+       _cons |   .2167644   .0194909    11.12   0.000      .178544    .2549849
+-------------+----------------------------------------------------------------
+  grade_year |   absorbed                                      (12 categories)
+.         
+.         // Step 10: Get student and teacher sample sizes.
+.         
+.         egen teacher_years = nvals(tid_`subject' school_year) if e(sample)
+.         summ teacher_years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+teacher_ye~s |     27,256         782           0        782        782
+.         local teacher_years = string(r(mean), "%9.0fc")
+.         egen unique_teachers = nvals(tid_`subject') if e(sample)
+.         summ unique_teachers
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+unique_tea~s |     27,256         369           0        369        369
+.         local unique_teachers = string(r(mean), "%9.0fc")
+.         
+.         egen student_years = nvals(sid school_year) if e(sample)
+.         summ student_years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+student_ye~s |     27,256       27256           0      27256      27256
+.         local student_years = string(r(mean), "%9.0fc")
+.         egen unique_students = nvals(sid) if e(sample)
+.         summ unique_students
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+unique_stu~s |     27,256       20048           0      20048      20048
+.         local unique_students = string(r(mean), "%9.0fc")
+.         
+.         // Step 11: Store coefficients in the first column and and standard errors in 
+.         // the second column of the results matrix.
+.         
+.         matrix results[1, 1] = _b[exp1]
+.         matrix results[2, 1] = _b[exp2]
+.         matrix results[3, 1] = _b[exp3]
+.         matrix results[4, 1] = _b[exp4]
+.         matrix results[5, 1] = _b[exp5]
+.         
+.         matrix results[1, 2] = _se[exp1]
+.         matrix results[2, 2] = _se[exp2]
+.         matrix results[3, 2] = _se[exp3]
+.         matrix results[4, 2] = _se[exp4]
+.         matrix results[5, 2] = _se[exp5]
+. 
+.         // Step 12: Add school fixed effects to prior model to generate within school 
+.         // comparison.
+.         
+.         areg std_scaled_score_`subject'_tm1 exp1-exp5, robust cluster(cid_`subject') ///
+>                 absorb(grade_year_school)
+
+Linear regression, absorbing indicators         Number of obs     =     27,256
+                                                F(   5,   2443)   =       4.26
+                                                Prob > F          =     0.0007
+                                                R-squared         =     0.1814
+                                                Adj R-squared     =     0.1717
+                                                Root MSE          =     0.8839
+
+                           (Std. Err. adjusted for 2,444 clusters in cid_math)
+------------------------------------------------------------------------------
+             |               Robust
+std_sc~h_tm1 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        exp1 |  -.2921182   .0655014    -4.46   0.000    -.4205621   -.1636742
+        exp2 |  -.0656162   .0548209    -1.20   0.231    -.1731164    .0418839
+        exp3 |   -.045825   .0623412    -0.74   0.462    -.1680721    .0764221
+        exp4 |   .0162954   .0683354     0.24   0.812    -.1177059    .1502967
+        exp5 |  -.0106059   .0698578    -0.15   0.879    -.1475926    .1263808
+       _cons |   .1699741   .0163167    10.42   0.000      .137978    .2019702
+-------------+----------------------------------------------------------------
+grade_year~l |   absorbed                                     (314 categories)
+.                 
+.         // Step 13: Store coefficients and standard errors in columns 3 and 4 of results 
+.         // matrix.
+.         
+.         matrix results[1, 3] = _b[exp1]
+.         matrix results[2, 3] = _b[exp2]
+.         matrix results[3, 3] = _b[exp3]
+.         matrix results[4, 3] = _b[exp4]
+.         matrix results[5, 3] = _b[exp5]
+.         
+.         matrix results[1, 4] = _se[exp1]
+.         matrix results[2, 4] = _se[exp2]
+.         matrix results[3, 4] = _se[exp3]
+.         matrix results[4, 4] = _se[exp4]
+.         matrix results[5, 4] = _se[exp5]
+. 
+.         // Step 14: Clear data and replace with matrix contents. Add variable for year 
+.         // teaching.
+.         
+.         clear
+.         svmat results, names(col)
+number of observations will be reset to 5
+Press any key to continue, or Break to abort
+number of observations (_N) was 0, now 5
+.         gen year_teaching = _n
+.         
+.         // Step 15: Get and store significance. Concatenate coefficient and asterisk 
+.         // to use as value label.
+.         
+.         foreach model in across_school within_school {
+  2.                 gen `model'_sig = abs(`model'_coef / `model'_se)
+  3.         }
+.         foreach var of varlist across_school_sig within_school_sig {
+  2.                 replace `var' = 0 if `var' < =1.96
+  3.                 replace `var' = 1 if `var' > 1.96
+  4.                 tostring `var', replace
+  5.                 replace `var' = "" if `var' == "0"
+  6.                 replace `var' = "*" if `var' == "1"
+  7.         }
+(1 real change made)
+(4 real changes made)
+across_school_sig was float now str1
+(1 real change made)
+(4 real changes made)
+(4 real changes made)
+(1 real change made)
+within_school_sig was float now str1
+(4 real changes made)
+(1 real change made)
+.         
+.         foreach model in across_school within_school {
+  2.                 gen `model'_string = string(`model'_coef, "%9.2f")
+  3.                 egen `model'_label = concat(`model'_string `model'_sig)
+  4.         }
+.                                 
+.         // Step 16: Define titles for subject and school level.
+.         
+.         if "`subject'" == "math" { 
+.                 local subj_title "Math" 
+.                 local subj_foot "math" 
+.         }
+.         if "`subject'"=="ela" {
+.                 local subj_title "ELA"
+.                 local subj_foot "English/Language Arts"
+.         } 
+.         
+.         local gradespan "5th through 8th"
+.         
+.         if "`level'" == "middle" {
+.                 local level_title "Middle "
+.                 local gradespan "6th through 8th"
+.         }
+.         
+.         if "`level'" == "elem" {
+.                 local level_title "Elementary "
+.                 local gradespan "5th"
+.         }
+.         
+.         // Step 17: Start loop through models to make and save across and within schools 
+.         // charts.
+.         
+.         foreach model in across within {
+  2.                                 
+.                 // Step 18: Define subtitle.
+.                 
+.                 if "`model'" == "across" {
+  3.                         local subtitle "Across `level_title'Schools"
+  4.                 }
+  5.                 if "`model'" == "within" {
+  6.                         local subtitle "Within `level_title'Schools"
+  7.                 }
+  8.         
+.                 // Step 19: Make chart. Bar chart gives average score difference relative to 6th 
+.                 // plus year teachers, while scatter plot places value and significance asterisk 
+.                 // as marker label below bar. Marker symbol is invisible.
+.         
+.                 #delimit ;
+delimiter now ;
+.                                 twoway bar `model'_school_coef year_teaching, 
+>                         barwidth(.6) color(navy) finten(100) ||
+>                         
+>                 scatter `model'_school_coef year_teaching, 
+>                         mlabel(`model'_school_label) 
+>                         msymbol(i) 
+>                         mlabpos(6) 
+>                         mlabcolor(black) ||,
+>                         
+>                         ytitle("Difference in Prior-Year Test Scores", size(medsmall)) 
+>                         title("Difference in Average Prior `subj_title' Performance"
+>                                 "of Students Assigned to Early-Career Teachers"
+>                                 "Compared to Teachers with Six or More Years of Teaching", span) 
+>                         subtitle("`subtitle'", span) 
+>                         xtitle("Year Teaching", size(medsmall)) 
+>                         xlabel(,labsize(medsmall))
+>                         legend(off) 
+> 
+>                         yline(0, lpattern(dash) lcolor(black)) 
+>                         yscale(range(-.4 .2)) 
+>                         ylabel(-.4(.1).2, nogrid labsize(medsmall)) 
+>                         ytick(-.4(.1).2) 
+>                         graphregion(color(white) fcolor(white) lcolor(white))
+>                         plotregion(color(white) fcolor(white) lcolor(white) margin(5 5 2 0))
+>                         
+>                         note(" " "*Significantly different from zero, at the 95 percent confidence 
+> level." "Notes: Sample includes `gradespan' grade `subj_foot' teachers and students in
+> the 2007-08 through 2010-11 school years," "with `teacher_years' teacher years, 
+> `unique_teachers' unique teachers, `student_years' student years, and `unique_students'
+> unique students. Test scores are measured in standard deviations.", size(vsmall) span);
+  9.                                 #delimit cr
+delimiter now cr
+.         
+.                 // Step 20: Save chart. If marker labels need to be moved by hand using Stata 
+.                 // Graph Editor, re-save .gph and .emf files after editing.
+.                 
+.                 graph export "${graphs}/Prior_Ach_by_Exp_`subtitle'_`subj_title'.emf", replace 
+ 10.                 graph save "${graphs}/Prior_Ach_by_Exp_`subtitle'_`subj_title'.gph", replace
+ 11.                 graph export "${docs}/Prior_Ach_by_Exp_`subtitle'_`subj_title'.png", replace
+ 12.                 
+.         }
+(note: file .\tables_figures/Prior_Ach_by_Exp_Across Middle Schools_Math.emf not found)
+(file C:\Users\emily\Documents\human-capital-stata\tables_figures/Prior_Ach_by_Exp_Across Middle Schools_Math.emf
+>  written in Enhanced Metafile format)
+(note: file .\tables_figures/Prior_Ach_by_Exp_Across Middle Schools_Math.gph not found)
+(file .\tables_figures/Prior_Ach_by_Exp_Across Middle Schools_Math.gph saved)
+(file .\docs/Prior_Ach_by_Exp_Across Middle Schools_Math.png written in PNG format)
+(note: file .\tables_figures/Prior_Ach_by_Exp_Within Middle Schools_Math.emf not found)
+(file C:\Users\emily\Documents\human-capital-stata\tables_figures/Prior_Ach_by_Exp_Within Middle Schools_Math.emf
+>  written in Enhanced Metafile format)
+(note: file .\tables_figures/Prior_Ach_by_Exp_Within Middle Schools_Math.gph not found)
+(file .\tables_figures/Prior_Ach_by_Exp_Within Middle Schools_Math.gph saved)
+(file .\docs/Prior_Ach_by_Exp_Within Middle Schools_Math.png written in PNG format)
+. 
+. }
+
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\emily\Documents\human-capital-stata\logs\Analyze_Placement.txt
+  log type:  text
+ closed on:  10 May 2018, 15:35:17
+-----------------------------------------------------------------------------------------------------------------

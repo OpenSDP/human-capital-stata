@@ -1,0 +1,64 @@
+---
+title: "Human Capital Analysis: Placement"
+output: 
+  html_document:
+    theme: simplex
+    css: styles.css
+    highlight: NULL
+    keep_md: true
+---
+
+<div class="navbar navbar-default navbar-fixed-top" id="logo">
+<div class="container">
+<img src="OpenSDP-Banner_crimson.jpg" style="display: block; margin: 0 auto; height: 115px;">
+</div>
+</div>
+
+[OpenSDP Analysis](http://opensdp.github.io./analysis)  /  Human Capital Analysis: Placement
+
+# Analyses
+
+##[1. Inspect Teacher Characteristics by School Poverty](Teacher_Char_by_School_Poverty.html) {.chart-index-element}
+
+[![](Teacher_Char_by_School_Poverty.png)](Teacher_Char_by_School_Poverty.html)
+
+Examines the characteristics of teachers in the highest and lowest poverty schools. 
+
+##[2. Examine Student Prior Achievement and Teacher Experience](Prior_Ach_by_Exp.html) {.chart-index-element}
+
+[![](Prior_Ach_by_Exp_Across Middle Schools_Math.png)](Prior_Ach_by_Exp.html)
+[![](Prior_Ach_by_Exp_Within Middle Schools_Math.png)](Prior_Ach_by_Exp.html)
+
+Compares the prior-year test scores of students in early career teachers' classrooms with those of veteran teachers' students. 
+
+
+#<br style="clear:both">Getting Started
+
+###Objective
+
+Students are not randomly assigned to teachers' classrooms. Sometimes nonrandom assignment benefi ts
+students. For example, some teachers have a talent for working with hard-to-reach students and might get
+assigned to more low-performing students than other teachers. Unfortunately, some placement decisions
+have little to do with students' needs. When the most senior teachers concentrate in districts, schools, and
+classrooms with the most advantaged students, while novice teachers teach lower-performing students in hardto-staff
+schools, achievement gaps widen. The SDP Placement analyses reveal patterns in student assignment
+to teachers across and within schools to identify places where efforts to reform placement policies could
+positively impact students and teachers. 
+
+###Using this Guide
+
+The Human Capital Analysis series is a set of guides, code, and sample data about policy-relevant teacher workforce topics. Browse this and other guides in the series for ideas about ways to investigate critical points in teaching careers such as recruitment, placement, development, evaluation, and retention. Each guide includes several analyses in the form of charts together with Stata analysis and graphing code to generate each chart.
+
+Once you've identified analyses that you want to replicate or modify, click the "Download" buttons to download Stata code and sample data. You can make changes to the charts using the code and sample data, or modify the code to work with your own data. If you're familiar with Github you can click "Go to Repository" and clone the entire Human Capital Analysis repository to your own computer.
+
+###About the Data
+
+The data visualizations in the Human Capital Analysis series use a synthetic dataset with four years of data for a fictitious school district. There is one record for each teacher in a given school year. Each record includes data about demographics, credentials, teaching experience, job assignments, evaluation scores, and new hire and retention status, as well as information about the schools to which teachers are assigned. The recruitment guide also uses a student data file for demographic information.
+
+###About the Analyses
+
+The recruitment process is the first opportunity education agencies have to secure highly effective teachers for their students. This guide documents the kinds of teachers the agency hires (e.g., novices and experienced new hires), their demographic characteristics, and their distribution within the agency. Analyzing recruitment trends can provide direction for a human resource strategy that aims to attract and place highly effective teachers in all classrooms.
+
+###Giving Feedback on the Guide
+
+This guide is an open-source document hosted on Github and generated using the R Statamarkdown package. We welcome feedback, corrections, additions, and updates. Please visit the OpenSDP human capital analysis repository to read our contributor guidelines.

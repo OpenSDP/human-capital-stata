@@ -1,0 +1,351 @@
+---
+title: "Observe Growth in Teacher Effects for Early Career Teachers"
+output: 
+  html_document:
+    theme: simplex
+    css: styles.css
+    highlight: NULL
+    keep_md: true
+    toc: true
+    toc_depth: 4
+    toc_float: true
+    number_sections: false
+---
+
+
+
+
+
+
+<div class="navbar navbar-default navbar-fixed-top" id="logo">
+<div class="container">
+<img src="OpenSDP-Banner_crimson.jpg" style="display: block; margin: 0 auto; height: 115px;">
+</div>
+</div>
+
+[OpenSDP Analysis](http://opensdp.github.io/analysis) / [Human Capital Analysis: Development](Human_Capital_Analysis_Development.html) / Observe Growth in Teacher Effects for Early Career Teachers
+
+![](Returns_To_Teaching_Experience_Math.png)
+
+###Preparation
+####Purpose
+
+Observe how teachers' effectiveness estimates change as they gain teaching experience.
+
+####Required analysis file variables
+
+ - `sid`
+ - `school_year`
+ - `tid_math`
+ - `cid_math`
+ - `grade_level`
+ - `t_is_teacher`
+ - `t_experience`
+ - `std_scaled_score_math`
+ - `std_scaled_score_math_tm1`
+ - `std_scaled_score_ela_tm1`
+
+####Analysis-specific sample restrictions
+
+ - Keep only grades and years for which prior-year test scores are available.
+ - Keep only students with a single identified current-year core course and current and prior-year test scores in the given subject.
+ - If school-level restriction is chosen, keep only records for either elementary or middle school grades.
+
+####Ask yourself
+
+ - Teacher salary schedules often compensate teachers for their teaching experience. How does your agency compensate teachers for experience? What are some ways that salary schedules could better align to increases in student outcomes over time?
+ - What induction and early career supports do novice teachers have? Do they vary by school, level of instruction (elementary, middle, high), and/or content area? Are the growth trajectories you see most related to recruitment practices, early career supports, or both? 
+
+####Potential further analyses
+
+- If your agency changed induction and/or early career programs and/or policies, conduct this analysis separately for teachers who were and were not affected by the program or policy. 
+- Examine other dimensions of teacher effectiveness over time (e.g., trends in student survey results). 
+
+###Analysis
+
+####Step 1: Choose the subject and school level.
+Choose the subject (math or ela) and school level (elem or middle) for the analysis. Note: To change from math to ELA, switch the subjects in the next two lines. To make multiple charts at the same time, put loops for subject and level around the analysis and graphing code. To include all grade levels in the analysis, comment out the local level command below.
+
+
+```stata
+local subject math
+local alt_subject ela
+*local level middle
+```
+
+####Step 2: Load data. 
+
+
+```stata
+use "${analysis}\Student_Teacher_Year_Analysis.dta", clear  
+isid sid school_year
+```
+
+####Step 3: Restrict the sample.
+Keep years for which teacher effects value added estimates are available. Keep only records for which teachers have pooled teacher effects estimates (pooled estimates use information from all available years for each teacher). If school level restriction is chosen, keep only records from either elementary or middle schools.
+
+
+```stata
+keep if school_year >= 2008 & school_year <= 2011
+keep if grade_level >= 5 & grade_level <= 8
+keep if t_is_teacher == 1
+keep if !missing(t_experience)
+keep if !missing(cid_`subject')
+keep if !missing(std_scaled_score_`subject', std_scaled_score_`subject'_tm1)
+if "`level'" == "elem" {	
+	keep if grade_level == 5
+}
+if "`level'" == "middle" {
+	keep if grade_level >= 6 & grade_level <= 8
+}
+```
+
+####Step 4: Review teacher variables.
+
+
+```stata
+tab school_year
+unique tid_`subject'
+unique tid_`subject' school_year
+tab t_experience t_novice, mi
+bysort tid_`subject' school_year: gen tag = (_n == 1)
+tab t_experience if tag == 1, mi
+drop tag
+```
+
+####Step 5: Create teaching experience variables.
+Create dummy variables for each year of teaching experience, putting all teachers with 10 or more years of experience in one group.
+
+
+```stata
+replace t_experience = 10 if t_experience >= 10
+tab t_experience, gen(exp)
+```
+
+####Step 6: Generate effects variable.
+Create variable for grade-by-year fixed effects.
+
+
+```stata
+egen grade_by_year = group(grade_level school_year)
+```
+
+####Step 7: Create previous year score variables.
+Create variables for previous year's score squared and cubed.
+
+
+```stata
+gen std_scaled_score_`subject'_tm1_sq = std_scaled_score_`subject'_tm1^2
+gen std_scaled_score_`subject'_tm1_cu = std_scaled_score_`subject'_tm1^3
+```
+
+####Step 8: Adjust data for missing students.
+Create indicator for whether student is missing prior achievement for alternate subject. Make a replacement variable that imputes score to zero if missing.
+
+
+```stata
+gen miss_std_scaled_score_`alt_subject'_tm1 = ///
+	missing(std_scaled_score_`alt_subject'_tm1)
+gen _IMPstd_scaled_score_`alt_subject'_tm1 = std_scaled_score_`alt_subject'_tm1
+replace _IMPstd_scaled_score_`alt_subject'_tm1 = 0 ///
+	if miss_std_scaled_score_`alt_subject'_tm1 == 1
+```
+
+####Step 9: Choose achievement control variables.
+Identify prior achievement variables to use as controls.
+
+
+```stata
+#delimit ;
+local prior_achievement 
+	"std_scaled_score_`subject'_tm1 
+	std_scaled_score_`subject'_tm1_sq
+	std_scaled_score_`subject'_tm1_cu 
+	_IMPstd_scaled_score_`alt_subject'_tm1 
+	miss_std_scaled_score_`alt_subject'_tm1";
+#delimit cr
+```
+
+####Step 10: Choose student control variables.
+Identify other student variables to use as controls.
+
+
+```stata
+#delimit;
+local student_controls 
+	"s_male 
+	s_black 
+	s_asian 
+	s_latino 
+	s_naam 
+	s_mult 
+	s_racemiss 
+	s_reducedlunch 
+	s_freelunch 
+	s_lunch_miss
+	s_retained
+	s_retained_miss
+	s_gifted
+	s_gifted_miss
+	s_iep
+	s_iep_miss
+	s_ell
+	s_ell_miss
+	s_absence_high
+	s_absence_miss";
+#delimit cr
+```
+
+####Step 11: Review variables.
+Review all variables to be included in the teacher effectiveness model. Class and cohort (grade/ school/year) variables should include means of all student variables, and means, standard deviations, and percent missing for prior-year test scores for both main and alternate subject. Class and cohort size should also be included as controls.
+
+
+```stata
+codebook std_scaled_score_`subject' exp1-exp10
+codebook `prior_achievement' 
+codebook `student_controls' 
+codebook _CL*`subject'* 
+codebook _CO*
+codebook grade_by_year cid_`subject'
+```
+
+####Step 12:  Estimate growth in teacher effects.
+Estimate growth in teacher effectiveness relative to novice teachers, using within-teacher fixed effects. Class and cohort (grade/ school/year) variables should include means of all student variables, and means, standard deviations, and percent missing for prior-year test scores for both main and alternate subject. Class and cohort size should also be included as controls.
+
+
+```stata
+areg std_scaled_score_`subject' exp2-exp10 `prior_achievement' `student_controls' ///
+		_CL*`subject'* _CO* i.grade_by_year, absorb(tid_`subject') cluster(cid_`subject')
+```
+
+####Step 13: Store coefficients and standard errors.
+
+
+```stata
+forval year = 2/10 {
+	gen coef_exp`year' = _b[exp`year']
+	gen se_exp`year' = _se[exp`year']
+}
+```
+
+####Step 14: Set novice teacher baseline.
+Set values to zero for novice comparison teachers.
+
+
+```stata
+gen coef_exp1 = 0 if exp1 == 1
+gen se_exp1 = 0 if exp1 == 1
+```
+
+####Step 15: Get teacher sample size.
+
+
+```stata
+egen teacher_years = nvals(tid_`subject' school_year) if e(sample)
+summ teacher_years
+local teacher_years = string(r(mean), "%9.0fc")
+egen unique_teachers = nvals(tid_`subject') if e(sample)
+summ unique_teachers
+local unique_teachers = string(r(mean), "%9.0fc")
+```
+
+####Step 16: Collapse and reshape data for graph.
+
+
+```stata
+collapse (max) coef_exp* se_exp*
+gen results = 1
+reshape long coef_exp se_exp, i(results) j(year_teaching)
+rename coef_exp coef
+rename se_exp se
+```
+
+####Step 17: Explore confidence intervals.
+Generate confidence intervals of the estimated returns to experience.
+
+
+```stata
+conf_hi = coef + (se * 1.96)
+gen conf_low = coef - (se * 1.96)	
+replace coef = round(coef,.01)
+```
+
+####Step 18: Make chart titles.
+Define subject and school level titles for graph.
+
+
+```stata
+if "`subject'" == "math" {
+	local subj_foot "math"
+	local subj_title "Math"
+}
+
+if "`subject'" == "ela" {
+	local subj_foot "English/Language Arts"
+	local subj_title "ELA"
+}
+local gradespan "5th through 8th"
+
+if "`level'" == "middle" {
+	local subj_title "Middle School `subj_title'"
+	local gradespan "6th through 8th"
+}
+
+if "`level'" == "elem" {
+	local subj_title "Elementary School `subj_title'"
+	local gradespan "5th"
+}
+```
+
+####Step 19: Make chart.
+
+
+```stata
+#delimit ;
+twoway rarea conf_hi conf_low year_teaching if year_teaching <= 10,
+	sort
+	color(ltblue) ||
+	
+	scatter coef year_teaching,
+		mlab(coef) mlabposition(12) mcolor(dknavy) mlabcolor(dknavy)
+		yline(0, lcolor(gs7) lpattern(dash)) 
+		yscale(range(-.05(.05).3))
+		ylabel(0(.1).4, labsize(medsmall) nogrid)
+		ytick(0(.1).4) ||,
+	
+	graphregion(color(white) fcolor(white) lcolor(white)) 
+	plotregion(color(white) fcolor(white) lcolor(white)) 
+	
+	title("Growth in `subj_title' Teacher Effects", span)
+	subtitle("Compared to First Year of Teaching", span)
+	ytitle("Difference in Teacher Effects", size(medsmall))
+	legend(order(2 1 3) 
+	label(2 "Teacher Effect")  
+	label(1 "95% Confidence Interval")) 
+	legend(cols(2) symxsize(5) ring(1) region(lstyle(none) lcolor(none) color(none))) 
+
+	xtitle("Year Teaching") 
+	xtick(1(1)10) 
+	xscale(range(1(1)10)) 
+	xlabel(1 "1" 2 "2" 3 "3" 4 "4" 5 "5" 6 "6" 7 "7" 8 "8" 9 "9" 10 "10+") 
+	
+	note(" " "Notes: Sample includes `gradespan' grade `subj_foot' teachers
+in the 2007-08 through 2011-12 school years, with `teacher_years' teacher years and" 
+"`unique_teachers' unique teachers. Teacher effects are average within-teacher
+year-to-year changes, measured in student test score standard deviations.", size(vsmall) 
+span);
+#delimit cr
+```
+
+####Step 20: Save chart.
+
+```stata
+graph export "${graphs}/Returns_to_Teaching_Experience_`subj_title'.emf", replace 
+graph save "${graphs}/Returns_to_Teaching_Experience_`subj_title'.gph", replace
+```
+
+
+
+---
+
+Next Analysis: [Examine Teacher Effects by Advanced Degree](Teacher_Effects_Advanced_Degree.html)
